@@ -1,7 +1,7 @@
 import { Bell, ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/App";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
   title: string;

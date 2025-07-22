@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Download } from "lucide-react";
-import { useAuth } from "@/App";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function OrdersTable() {
   const { user } = useAuth();

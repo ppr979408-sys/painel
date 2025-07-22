@@ -11,20 +11,7 @@ import ProductsPage from "@/pages/products";
 import ProfitsPage from "@/pages/profits";
 import ReportsPage from "@/pages/reports";
 import NotFound from "@/pages/not-found";
-import { useState, createContext, useContext } from "react";
-import type { Cliente } from "@shared/schema";
-
-interface AuthContextType {
-  user: Cliente | null;
-  setUser: (user: Cliente | null) => void;
-}
-
-const AuthContext = createContext<AuthContextType>({
-  user: null,
-  setUser: () => {}
-});
-
-export const useAuth = () => useContext(AuthContext);
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 
 function Router() {
   const { user } = useAuth();
@@ -52,29 +39,13 @@ function Router() {
 }
 
 function App() {
-  const [user, setUser] = useState<Cliente | null>(null);
-
-  console.log("App - user state changed:", user);
-
-  const handleSetUser = (newUser: Cliente | null) => {
-    console.log("App - setUser called with:", newUser);
-    setUser(newUser);
-  };
-
-  const contextValue = { 
-    user, 
-    setUser: handleSetUser
-  };
-
-  console.log("App - providing context value:", contextValue);
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <AuthContext.Provider value={contextValue}>
+        <AuthProvider>
           <Toaster />
           <Router />
-        </AuthContext.Provider>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

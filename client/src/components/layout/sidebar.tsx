@@ -9,7 +9,7 @@ import {
   Settings,
   UtensilsCrossed
 } from "lucide-react";
-import { useAuth } from "@/App";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: BarChart3 },

@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Restaurant Dashboard Custom Colors */
+  --restaurant-primary: hsl(207, 90%, 54%);
+  --restaurant-primary-dark: hsl(214, 76%, 47%);
+  --restaurant-secondary: hsl(122, 39%, 49%);
+  --restaurant-secondary-dark: hsl(122, 39%, 39%);
+  --restaurant-accent: hsl(37, 100%, 50%);
+  --restaurant-success: hsl(123, 43%, 60%);
+  --restaurant-warning: hsl(37, 100%, 50%);
+  --restaurant-error: hsl(0, 74%, 54%);
+  --restaurant-surface: hsl(0, 0%, 100%);
+  --restaurant-background: hsl(0, 0%, 96%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .restaurant-primary {
+    background-color: var(--restaurant-primary);
+  }
+  
+  .restaurant-primary-dark {
+    background-color: var(--restaurant-primary-dark);
+  }
+  
+  .restaurant-secondary {
+    background-color: var(--restaurant-secondary);
+  }
+  
+  .restaurant-surface {
+    background-color: var(--restaurant-surface);
+  }
+  
+  .restaurant-background {
+    background-color: var(--restaurant-background);
+  }
+  
+  .text-restaurant-primary {
+    color: var(--restaurant-primary);
+  }
+  
+  .text-restaurant-success {
+    color: var(--restaurant-success);
+  }
+  
+  .text-restaurant-warning {
+    color: var(--restaurant-warning);
+  }
+  
+  .text-restaurant-error {
+    color: var(--restaurant-error);
+  }
+
+  .nav-item.active {
+    background-color: hsl(214, 100%, 97%);
+    color: var(--restaurant-primary);
+    border-right: 3px solid var(--restaurant-primary);
+  }
+
+  .shadow-card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .shadow-card-hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+}

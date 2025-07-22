@@ -54,10 +54,20 @@ function Router() {
 function App() {
   const [user, setUser] = useState<Cliente | null>(null);
 
+  console.log("App - user state changed:", user);
+
+  const contextValue = { 
+    user, 
+    setUser: (newUser: Cliente | null) => {
+      console.log("App - setUser called with:", newUser);
+      setUser(newUser);
+    }
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={contextValue}>
           <Toaster />
           <Router />
         </AuthContext.Provider>

@@ -30,12 +30,39 @@ export default function OrdersTable() {
     }
   };
 
+  const viewOrderDetails = (comanda: string) => {
+    alert(`Visualizando detalhes do pedido #${comanda}\n\nEsta funcionalidade abrirá uma modal com todos os detalhes do pedido.`);
+  };
+
+  const downloadOrderReceipt = (comanda: string) => {
+    // Simular download de recibo
+    const receiptContent = `
+RECIBO - PEDIDO #${comanda}
+========================================
+Data: ${new Date().toLocaleDateString('pt-BR')}
+Hora: ${new Date().toLocaleTimeString('pt-BR')}
+
+Obrigado pela preferência!
+========================================
+    `.trim();
+
+    const blob = new Blob([receiptContent], { type: 'text/plain;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `recibo-pedido-${comanda}.txt`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Pedidos Recentes</CardTitle>
-          <Button variant="outline" size="sm">Ver todos</Button>
+          <Button variant="outline" size="sm" onClick={() => window.location.href = '/sales'}>Ver todos</Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -76,10 +103,10 @@ export default function OrdersTable() {
                     <TableCell>{getStatusBadge(order.status)}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" onClick={() => viewOrderDetails(order.comanda)}>
                           <Eye className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" onClick={() => downloadOrderReceipt(order.comanda)}>
                           <Download className="w-4 h-4" />
                         </Button>
                       </div>

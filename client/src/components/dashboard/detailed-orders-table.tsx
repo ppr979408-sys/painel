@@ -31,6 +31,43 @@ export default function DetailedOrdersTable() {
     }
   };
 
+  const exportToCSV = () => {
+    if (!Array.isArray(detailedOrders) || detailedOrders.length === 0) {
+      alert('Não há dados para exportar');
+      return;
+    }
+
+    const headers = ['Comanda', 'Cliente', 'Produto', 'Categoria', 'Quantidade', 'Preço Unitário', 'Receita', 'Custo', 'Lucro', 'Margem %', 'Status', 'Data'];
+    const csvData = detailedOrders.map(order => [
+      order.comanda,
+      order.user_name,
+      order.product_name,
+      order.categoria,
+      order.quantidade,
+      `R$ ${order.preco_unitario.toFixed(2)}`,
+      `R$ ${order.receita.toFixed(2)}`,
+      `R$ ${order.custo.toFixed(2)}`,
+      `R$ ${order.lucro.toFixed(2)}`,
+      `${order.margem.toFixed(1)}%`,
+      order.status,
+      order.data_formatada
+    ]);
+
+    const csvContent = [headers, ...csvData]
+      .map(row => row.map(field => `"${field}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `pedidos-detalhados-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -42,13 +79,13 @@ export default function DetailedOrdersTable() {
             </CardDescription>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => alert('Filtros em desenvolvimento')}>
               <Filter className="w-4 h-4 mr-2" />
               Filtrar
             </Button>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => exportToCSV()}>
               <Download className="w-4 h-4 mr-2" />
-              Exportar
+              Exportar CSV
             </Button>
           </div>
         </div>

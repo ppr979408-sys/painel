@@ -119,7 +119,7 @@ export default function DashboardPage() {
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Produtos Mais Vendidos</h3>
-                <button className="text-blue-600 hover:text-blue-800 text-sm">Ver todos</button>
+                <button className="text-blue-600 hover:text-blue-800 text-sm" onClick={() => window.location.href = '/products'}>Ver todos</button>
               </div>
               
               <div className="space-y-4">

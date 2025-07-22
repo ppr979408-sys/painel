@@ -26,9 +26,9 @@ function Router() {
   console.log("Router - User authenticated, showing dashboard routes");
   return (
     <Switch>
-      <Route path="/" component={SimpleDashboardPage} />
-      <Route path="/dashboard" component={SimpleDashboardPage} />
-      <Route path="/dashboard-full" component={DashboardPage} />
+      <Route path="/" component={DashboardPage} />
+      <Route path="/dashboard" component={DashboardPage} />
+      <Route path="/dashboard-simple" component={SimpleDashboardPage} />
       <Route path="/sales" component={SalesPage} />
       <Route path="/products" component={ProductsPage} />
       <Route path="/profits" component={ProfitsPage} />

@@ -16,6 +16,7 @@ export interface IStorage {
   getAllProducts(codigoLoja: string): Promise<ProductPerformance[]>;
   getMarginAnalysis(codigoLoja: string): Promise<any>;
   getSalesByCategory(codigoLoja: string): Promise<any[]>;
+  getDetailedOrdersWithProfit(codigoLoja: string): Promise<any[]>;
 }
 
 export class TestStorage implements IStorage {
@@ -194,6 +195,44 @@ export class TestStorage implements IStorage {
       { categoria: 'Açaí', salesCount: 28, revenue: 445.20 },
       { categoria: 'Bebidas', salesCount: 67, revenue: 596.30 }
     ];
+  }
+
+  async getDetailedOrdersWithProfit(codigoLoja: string): Promise<any[]> {
+    const orders = this.testOrders.filter(o => o.codigo_loja === codigoLoja);
+    
+    return orders.map(order => {
+      const product = this.testProducts.find(p => p.id.toString() === order.IdItem);
+      const revenue = parseFloat(order.preco) * order.QtdeItem;
+      let cost = 0;
+      let profit = 0;
+      let margin = 0;
+      let productName = 'Produto Desconhecido';
+      let category = 'N/A';
+      
+      if (product) {
+        cost = parseFloat(product.preco_custo) * order.QtdeItem;
+        profit = revenue - cost;
+        margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+        productName = product.titulo;
+        category = product.categoria;
+      }
+      
+      return {
+        comanda: order.comanda,
+        user_name: order.user_name,
+        product_name: productName,
+        categoria: category,
+        preco_unitario: parseFloat(order.preco),
+        quantidade: order.QtdeItem,
+        receita: revenue,
+        custo: cost,
+        lucro: profit,
+        margem: margin,
+        status: order.status,
+        data_completa: order.data_completa,
+        data_formatada: new Date(order.data_completa).toLocaleDateString('pt-BR')
+      };
+    }).sort((a, b) => new Date(b.data_completa).getTime() - new Date(a.data_completa).getTime());
   }
 }
 

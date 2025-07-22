@@ -114,6 +114,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Detailed orders with profit
+  app.get("/api/orders/detailed/:codigoLoja", async (req, res) => {
+    try {
+      const { codigoLoja } = req.params;
+      const orders = await storage.getDetailedOrdersWithProfit(codigoLoja);
+      res.json(orders);
+    } catch (error) {
+      res.status(500).json({ error: "Erro ao carregar pedidos detalhados" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

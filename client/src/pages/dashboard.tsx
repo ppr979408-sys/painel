@@ -5,6 +5,8 @@ import Header from "@/components/layout/header";
 import KPICard from "@/components/dashboard/kpi-card";
 import SalesChart from "@/components/dashboard/sales-chart";
 import OrdersTable from "@/components/dashboard/orders-table";
+import DetailedOrdersTable from "@/components/dashboard/detailed-orders-table";
+import ProductsProfitTable from "@/components/dashboard/products-profit-table";
 import { 
   ShoppingCart, 
   Receipt, 
@@ -44,11 +46,11 @@ export default function DashboardPage() {
       <Sidebar />
       
       <div className="lg:ml-64">
-        <Header title="Dashboard" />
+        <Header title="Dashboard Completo" />
         
         <main className="p-6">
           {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-8">
             <KPICard
               title="Vendas Hoje"
               value={`R$ ${metrics?.todaySales?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}`}
@@ -65,6 +67,26 @@ export default function DashboardPage() {
               change="+8 vs ontem"
               changeType="positive"
               icon={Receipt}
+              iconColor="bg-green-100 text-green-600"
+              isLoading={metricsLoading}
+            />
+
+            <KPICard
+              title="Total Vendido"
+              value={`R$ ${metrics?.totalRevenue?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}`}
+              change="+15.8% vs mês"
+              changeType="positive"
+              icon={TrendingUp}
+              iconColor="bg-purple-100 text-purple-600"
+              isLoading={metricsLoading}
+            />
+
+            <KPICard
+              title="Lucro Total"
+              value={`R$ ${metrics?.totalProfit?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}`}
+              change="+18.3% vs mês"
+              changeType="positive"
+              icon={TrendingUp}
               iconColor="bg-green-100 text-green-600"
               isLoading={metricsLoading}
             />
@@ -131,7 +153,19 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Orders Table */}
-          <OrdersTable />
+          <div className="mb-8">
+            <OrdersTable />
+          </div>
+
+          {/* Detailed Orders with Profit - Each order sold with profit */}
+          <div className="mb-8">
+            <DetailedOrdersTable />
+          </div>
+
+          {/* Products Profit Analysis - Profit per product */}
+          <div className="mb-8">
+            <ProductsProfitTable />
+          </div>
         </main>
       </div>
     </div>

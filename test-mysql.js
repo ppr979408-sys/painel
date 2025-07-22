@@ -1,5 +1,5 @@
 // Script para testar conexão MySQL e verificar dados
-const mysql = require('mysql2/promise');
+import mysql from 'mysql2/promise';
 
 async function testMySQLConnection() {
   try {

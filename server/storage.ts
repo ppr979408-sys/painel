@@ -21,6 +21,7 @@ export interface IStorage {
 }
 
 export class TestStorage implements IStorage {
+  // Dados baseados no schema real do banco MySQL fornecido
   private testClients = [
     {
       codigo_loja: 'LOJA001',
@@ -33,23 +34,86 @@ export class TestStorage implements IStorage {
       cidade: 'São Paulo',
       uf: 'SP',
       status: '1'
+    },
+    {
+      codigo_loja: 'LOJA002',
+      nome: 'Maria',
+      sobrenome: 'Costa',
+      nome_empresa: 'Açaí da Maria',
+      email: 'maria@acai.com',
+      telefone: '(11) 88888-8888',
+      endereco: 'Av. Paulista, 500',
+      cidade: 'São Paulo',
+      uf: 'SP',
+      status: '1'
     }
   ];
 
+  // Produtos baseados nas categorias reais do banco (tabela cadastrofeed)
   private testProducts = [
+    // Pizza
     { id: 1, titulo: 'Pizza Margherita', preco_venda: '45.90', preco_custo: '18.50', categoria: 'Pizza', codigo_loja: 'LOJA001', estoque: '50' },
     { id: 2, titulo: 'Pizza Calabresa', preco_venda: '48.90', preco_custo: '20.00', categoria: 'Pizza', codigo_loja: 'LOJA001', estoque: '45' },
-    { id: 3, titulo: 'Açaí 500ml', preco_venda: '15.90', preco_custo: '8.50', categoria: 'Açaí', codigo_loja: 'LOJA001', estoque: '100' },
-    { id: 4, titulo: 'Coca Cola 2L', preco_venda: '8.90', preco_custo: '5.50', categoria: 'Bebidas', codigo_loja: 'LOJA001', estoque: '200' },
-    { id: 5, titulo: 'X-Burger', preco_venda: '25.90', preco_custo: '12.00', categoria: 'Lanches', codigo_loja: 'LOJA001', estoque: '30' }
+    { id: 3, titulo: 'Pizza Portuguesa', preco_venda: '52.90', preco_custo: '22.50', categoria: 'Pizza', codigo_loja: 'LOJA001', estoque: '40' },
+    
+    // Açaí (categoria real do banco)
+    { id: 4, titulo: 'Açaí 300ml', preco_venda: '12.90', preco_custo: '7.50', categoria: 'Açai', codigo_loja: 'LOJA001', estoque: '150' },
+    { id: 5, titulo: 'Açaí 500ml', preco_venda: '18.90', preco_custo: '11.00', categoria: 'Açai', codigo_loja: 'LOJA001', estoque: '120' },
+    { id: 6, titulo: 'Açaí 700ml', preco_venda: '24.90', preco_custo: '14.50', categoria: 'Açai', codigo_loja: 'LOJA001', estoque: '80' },
+    
+    // Bebidas
+    { id: 7, titulo: 'Coca Cola 2L', preco_venda: '8.90', preco_custo: '5.50', categoria: 'Bebidas', codigo_loja: 'LOJA001', estoque: '200' },
+    { id: 8, titulo: 'Suco Natural Laranja', preco_venda: '6.90', preco_custo: '3.50', categoria: 'Bebidas', codigo_loja: 'LOJA001', estoque: '100' },
+    { id: 9, titulo: 'Água Mineral 500ml', preco_venda: '3.50', preco_custo: '1.80', categoria: 'Bebidas', codigo_loja: 'LOJA001', estoque: '300' },
+    
+    // Lanches
+    { id: 10, titulo: 'X-Burger', preco_venda: '25.90', preco_custo: '12.00', categoria: 'Lanches', codigo_loja: 'LOJA001', estoque: '30' },
+    { id: 11, titulo: 'X-Salada', preco_venda: '28.90', preco_custo: '14.50', categoria: 'Lanches', codigo_loja: 'LOJA001', estoque: '25' },
+    { id: 12, titulo: 'X-Bacon', preco_venda: '32.90', preco_custo: '18.00', categoria: 'Lanches', codigo_loja: 'LOJA001', estoque: '20' },
+    
+    // Hotdog (categoria real)
+    { id: 13, titulo: 'Hotdog Tradicional', preco_venda: '15.90', preco_custo: '8.50', categoria: 'Hotdog', codigo_loja: 'LOJA001', estoque: '60' },
+    { id: 14, titulo: 'Hotdog Especial', preco_venda: '19.90', preco_custo: '11.00', categoria: 'Hotdog', codigo_loja: 'LOJA001', estoque: '40' },
+    
+    // Pastel (categoria real)
+    { id: 15, titulo: 'Pastel de Carne', preco_venda: '8.90', preco_custo: '4.50', categoria: 'Pastel', codigo_loja: 'LOJA001', estoque: '80' },
+    { id: 16, titulo: 'Pastel de Queijo', preco_venda: '7.90', preco_custo: '3.80', categoria: 'Pastel', codigo_loja: 'LOJA001', estoque: '90' },
+    
+    // Sorvetes (categoria real)
+    { id: 17, titulo: 'Sorvete Casquinha', preco_venda: '5.90', preco_custo: '2.50', categoria: 'Sorvetes', codigo_loja: 'LOJA001', estoque: '100' },
+    { id: 18, titulo: 'Milkshake Chocolate', preco_venda: '12.90', preco_custo: '7.00', categoria: 'Sorvetes', codigo_loja: 'LOJA001', estoque: '50' },
+    
+    // Doces (categoria real)
+    { id: 19, titulo: 'Brigadeiro', preco_venda: '3.50', preco_custo: '1.50', categoria: 'Doces', codigo_loja: 'LOJA001', estoque: '200' },
+    { id: 20, titulo: 'Beijinho', preco_venda: '3.50', preco_custo: '1.50', categoria: 'Doces', codigo_loja: 'LOJA001', estoque: '180' }
   ];
 
+  // Pedidos simulados baseados na estrutura real da tabela ComandaPedidos
   private testOrders = [
+    // Pedidos de hoje
     { comanda: '001', user_name: 'Ana Costa', IdItem: '1', preco: '45.90', QtdeItem: 2, status: '4', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
-    { comanda: '002', user_name: 'Carlos Lima', IdItem: '2', preco: '48.90', QtdeItem: 1, status: '4', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
-    { comanda: '003', user_name: 'Fernanda Reis', IdItem: '3', preco: '15.90', QtdeItem: 3, status: '4', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
-    { comanda: '004', user_name: 'Roberto Silva', IdItem: '5', preco: '25.90', QtdeItem: 2, status: '2', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
-    { comanda: '005', user_name: 'Lucia Santos', IdItem: '1', preco: '45.90', QtdeItem: 1, status: '4', data_completa: new Date(Date.now() - 86400000).toISOString(), codigo_loja: 'LOJA001' }
+    { comanda: '002', user_name: 'Carlos Lima', IdItem: '4', preco: '12.90', QtdeItem: 3, status: '4', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '003', user_name: 'Fernanda Reis', IdItem: '10', preco: '25.90', QtdeItem: 1, status: '4', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '004', user_name: 'Roberto Silva', IdItem: '7', preco: '8.90', QtdeItem: 2, status: '2', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '005', user_name: 'Lucia Santos', IdItem: '13', preco: '15.90', QtdeItem: 1, status: '4', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '006', user_name: 'Pedro Oliveira', IdItem: '19', preco: '3.50', QtdeItem: 5, status: '4', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
+    
+    // Pedidos de ontem
+    { comanda: '007', user_name: 'Maria Silva', IdItem: '2', preco: '48.90', QtdeItem: 1, status: '4', data_completa: new Date(Date.now() - 86400000).toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '008', user_name: 'João Santos', IdItem: '5', preco: '18.90', QtdeItem: 2, status: '4', data_completa: new Date(Date.now() - 86400000).toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '009', user_name: 'Patricia Costa', IdItem: '11', preco: '28.90', QtdeItem: 1, status: '4', data_completa: new Date(Date.now() - 86400000).toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '010', user_name: 'Ricardo Alves', IdItem: '15', preco: '8.90', QtdeItem: 3, status: '4', data_completa: new Date(Date.now() - 86400000).toISOString(), codigo_loja: 'LOJA001' },
+    
+    // Pedidos da semana passada
+    { comanda: '011', user_name: 'Cristina Mendes', IdItem: '3', preco: '52.90', QtdeItem: 1, status: '4', data_completa: new Date(Date.now() - 86400000 * 3).toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '012', user_name: 'André Rocha', IdItem: '6', preco: '24.90', QtdeItem: 1, status: '4', data_completa: new Date(Date.now() - 86400000 * 3).toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '013', user_name: 'Beatriz Lima', IdItem: '12', preco: '32.90', QtdeItem: 2, status: '4', data_completa: new Date(Date.now() - 86400000 * 4).toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '014', user_name: 'Gabriel Silva', IdItem: '14', preco: '19.90', QtdeItem: 1, status: '4', data_completa: new Date(Date.now() - 86400000 * 5).toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '015', user_name: 'Camila Santos', IdItem: '18', preco: '12.90', QtdeItem: 2, status: '4', data_completa: new Date(Date.now() - 86400000 * 6).toISOString(), codigo_loja: 'LOJA001' },
+    
+    // Pedidos em andamento
+    { comanda: '016', user_name: 'Felipe Costa', IdItem: '1', preco: '45.90', QtdeItem: 1, status: '2', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
+    { comanda: '017', user_name: 'Tatiana Rocha', IdItem: '8', preco: '6.90', QtdeItem: 2, status: '3', data_completa: new Date().toISOString(), codigo_loja: 'LOJA001' },
   ];
 
   async authenticateUser(credentials: LoginRequest): Promise<Cliente | null> {
@@ -174,28 +238,76 @@ export class TestStorage implements IStorage {
   }
 
   async getMarginAnalysis(codigoLoja: string): Promise<any> {
+    let totalRevenue = 0;
+    let totalCost = 0;
+    const categoryData: Record<string, { revenue: number, cost: number }> = {};
+    
+    // Calcular margens baseado nos dados reais
+    for (const order of this.testOrders) {
+      if (order.codigo_loja === codigoLoja && order.status === '4') {
+        const product = this.testProducts.find(p => p.id.toString() === order.IdItem);
+        if (product) {
+          const revenue = parseFloat(order.preco) * order.QtdeItem;
+          const cost = parseFloat(product.preco_custo) * order.QtdeItem;
+          
+          totalRevenue += revenue;
+          totalCost += cost;
+          
+          const categoria = product.categoria;
+          if (!categoryData[categoria]) {
+            categoryData[categoria] = { revenue: 0, cost: 0 };
+          }
+          
+          categoryData[categoria].revenue += revenue;
+          categoryData[categoria].cost += cost;
+        }
+      }
+    }
+    
+    const avgMargin = totalRevenue > 0 ? ((totalRevenue - totalCost) / totalRevenue) * 100 : 0;
+    
+    const byCategory = Object.entries(categoryData).map(([categoria, data]) => ({
+      categoria,
+      margin: data.revenue > 0 ? Number(((data.revenue - data.cost) / data.revenue * 100).toFixed(1)) : 0
+    })).sort((a, b) => b.margin - a.margin);
+    
     return {
       overall: {
-        totalRevenue: 2450.80,
-        totalCost: 1120.50,
-        avgMargin: 54.3
+        totalRevenue: Number(totalRevenue.toFixed(2)),
+        totalCost: Number(totalCost.toFixed(2)),
+        avgMargin: Number(avgMargin.toFixed(1))
       },
-      byCategory: [
-        { categoria: 'Pizza', margin: 62.1 },
-        { categoria: 'Lanches', margin: 53.7 },
-        { categoria: 'Açaí', margin: 46.5 },
-        { categoria: 'Bebidas', margin: 38.2 }
-      ]
+      byCategory
     };
   }
 
   async getSalesByCategory(codigoLoja: string): Promise<any[]> {
-    return [
-      { categoria: 'Pizza', salesCount: 45, revenue: 1250.80 },
-      { categoria: 'Lanches', salesCount: 32, revenue: 890.45 },
-      { categoria: 'Açaí', salesCount: 28, revenue: 445.20 },
-      { categoria: 'Bebidas', salesCount: 67, revenue: 596.30 }
-    ];
+    const categorySales: Record<string, { count: number, revenue: number }> = {};
+    
+    // Calcular vendas por categoria baseado nos pedidos simulados
+    for (const order of this.testOrders) {
+      if (order.codigo_loja === codigoLoja && order.status === '4') {
+        const product = this.testProducts.find(p => p.id.toString() === order.IdItem);
+        if (product) {
+          const categoria = product.categoria;
+          const revenue = parseFloat(order.preco) * order.QtdeItem;
+          
+          if (!categorySales[categoria]) {
+            categorySales[categoria] = { count: 0, revenue: 0 };
+          }
+          
+          categorySales[categoria].count += 1;
+          categorySales[categoria].revenue += revenue;
+        }
+      }
+    }
+    
+    // Converter para o formato esperado
+    return Object.entries(categorySales).map(([categoria, data]) => ({
+      categoria,
+      salesCount: data.count,
+      revenue: Number(data.revenue.toFixed(2))
+    })).sort((a, b) => b.revenue - a.revenue);
   }
 
   async getDetailedOrdersWithProfit(codigoLoja: string): Promise<any[]> {

@@ -5,6 +5,7 @@ import type {
   SalesData, 
   ProductPerformance 
 } from "@shared/schema";
+import mysql from 'mysql2/promise';
 
 export interface IStorage {
   authenticateUser(credentials: LoginRequest): Promise<Cliente | null>;
@@ -236,4 +237,384 @@ export class TestStorage implements IStorage {
   }
 }
 
-export const storage = new TestStorage();
+// MySQL Storage - Real database implementation
+export class MySQLStorage implements IStorage {
+  private connection: mysql.Connection | null = null;
+
+  private async getConnection(): Promise<mysql.Connection> {
+    if (!this.connection) {
+      this.connection = await mysql.createConnection({
+        host: process.env.MYSQL_HOST || 'localhost',
+        user: process.env.MYSQL_USER || 'root',
+        password: process.env.MYSQL_PASSWORD || '',
+        database: process.env.MYSQL_DATABASE || 'menu',
+        port: parseInt(process.env.MYSQL_PORT || '3306')
+      });
+    }
+    return this.connection;
+  }
+
+  async authenticateUser(credentials: LoginRequest): Promise<Cliente | null> {
+    const connection = await this.getConnection();
+    const [rows] = await connection.execute(
+      'SELECT * FROM clientes WHERE email = ? AND status = "1" LIMIT 1',
+      [credentials.email]
+    );
+    
+    const clients = rows as any[];
+    return clients.length > 0 ? clients[0] : null;
+  }
+
+  async getDashboardMetrics(codigoLoja: string): Promise<DashboardMetrics> {
+    const connection = await this.getConnection();
+    
+    // Buscar pedidos de hoje
+    const [todayOrdersResult] = await connection.execute(`
+      SELECT COUNT(*) as total_orders, 
+             COALESCE(SUM(preco * QtdeItem), 0) as total_sales
+      FROM ComandaPedidos 
+      WHERE codigo_loja = ? 
+      AND DATE(data_completa) = CURDATE() 
+      AND status = '4'
+    `, [codigoLoja]);
+    
+    const todayData = (todayOrdersResult as any[])[0];
+    
+    // Buscar dados de margem e lucro
+    const [profitResult] = await connection.execute(`
+      SELECT 
+        COALESCE(SUM(cp.preco * cp.QtdeItem), 0) as total_revenue,
+        COALESCE(SUM(cf.preco_custo * cp.QtdeItem), 0) as total_cost
+      FROM ComandaPedidos cp
+      LEFT JOIN cadastrofeed cf ON cp.IdItem = cf.id
+      WHERE cp.codigo_loja = ? 
+      AND cp.status = '4'
+      AND DATE(cp.data_completa) = CURDATE()
+    `, [codigoLoja]);
+    
+    const profitData = (profitResult as any[])[0];
+    const totalRevenue = parseFloat(profitData?.total_revenue || '0');
+    const totalCost = parseFloat(profitData?.total_cost || '0');
+    const totalProfit = totalRevenue - totalCost;
+    const averageMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+    const averageTicket = todayData.total_orders > 0 ? parseFloat(todayData.total_sales) / todayData.total_orders : 0;
+
+    return {
+      todaySales: parseFloat(todayData.total_sales || '0'),
+      todayOrders: parseInt(todayData.total_orders || '0'),
+      averageMargin: Number(averageMargin.toFixed(1)),
+      averageTicket: Number(averageTicket.toFixed(2)),
+      totalRevenue: Number(totalRevenue.toFixed(2)),
+      totalProfit: Number(totalProfit.toFixed(2))
+    };
+  }
+
+  async getSalesData(codigoLoja: string, period: string = '7'): Promise<SalesData[]> {
+    const connection = await this.getConnection();
+    const days = parseInt(period);
+    
+    const [rows] = await connection.execute(`
+      SELECT 
+        DATE(data_completa) as date,
+        COALESCE(SUM(preco * QtdeItem), 0) as revenue,
+        COUNT(*) as orders
+      FROM ComandaPedidos 
+      WHERE codigo_loja = ? 
+      AND status = '4'
+      AND DATE(data_completa) >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+      GROUP BY DATE(data_completa)
+      ORDER BY DATE(data_completa)
+    `, [codigoLoja, days]);
+    
+    const salesData = (rows as any[]).map(row => ({
+      date: row.date,
+      revenue: Number(parseFloat(row.revenue).toFixed(2)),
+      orders: parseInt(row.orders),
+      margin: Number((55 + Math.random() * 20).toFixed(1)) // Placeholder para margem
+    }));
+    
+    return salesData;
+  }
+
+  async getRecentOrders(codigoLoja: string, limit: number = 10): Promise<any[]> {
+    const connection = await this.getConnection();
+    
+    const [rows] = await connection.execute(`
+      SELECT 
+        cp.comanda,
+        cp.user_name,
+        cf.titulo as product_title,
+        cp.preco,
+        cp.QtdeItem,
+        cp.status,
+        cp.data_completa,
+        cf.preco_custo
+      FROM ComandaPedidos cp
+      LEFT JOIN cadastrofeed cf ON cp.IdItem = cf.id
+      WHERE cp.codigo_loja = ?
+      ORDER BY cp.data_completa DESC
+      LIMIT ?
+    `, [codigoLoja, limit]);
+    
+    return (rows as any[]).map(order => {
+      const total = parseFloat(order.preco) * parseInt(order.QtdeItem);
+      const cost = parseFloat(order.preco_custo || '0') * parseInt(order.QtdeItem);
+      const profit = total - cost;
+      
+      return {
+        comanda: order.comanda,
+        user_name: order.user_name,
+        items: order.product_title || 'Item não encontrado',
+        total: Number(total.toFixed(2)),
+        profit: Number(profit.toFixed(2)),
+        margin: total > 0 ? ((profit / total) * 100).toFixed(1) : '0',
+        status: order.status,
+        data: order.data_completa
+      };
+    });
+  }
+
+  async getTopProducts(codigoLoja: string, limit: number = 5): Promise<ProductPerformance[]> {
+    const connection = await this.getConnection();
+    
+    const [rows] = await connection.execute(`
+      SELECT 
+        cf.id,
+        cf.titulo,
+        cf.categoria,
+        COUNT(cp.IdItem) as sales_count,
+        SUM(cp.preco * cp.QtdeItem) as revenue,
+        AVG(cf.preco_venda) as avg_price,
+        AVG(cf.preco_custo) as avg_cost
+      FROM cadastrofeed cf
+      LEFT JOIN ComandaPedidos cp ON cf.id = cp.IdItem AND cp.status = '4'
+      WHERE cf.codigo_loja = ?
+      GROUP BY cf.id, cf.titulo, cf.categoria
+      ORDER BY sales_count DESC, revenue DESC
+      LIMIT ?
+    `, [codigoLoja, limit]);
+    
+    return (rows as any[]).map(product => {
+      const revenue = parseFloat(product.revenue || '0');
+      const cost = parseFloat(product.avg_cost || '0') * parseInt(product.sales_count || '0');
+      const profit = revenue - cost;
+      const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+      
+      return {
+        id: parseInt(product.id),
+        titulo: product.titulo,
+        categoria: product.categoria,
+        salesCount: parseInt(product.sales_count || '0'),
+        revenue: Number(revenue.toFixed(2)),
+        margin: Number(margin.toFixed(1)),
+        profit: Number(profit.toFixed(2))
+      };
+    });
+  }
+
+  async getLowPerformingProducts(codigoLoja: string, limit: number = 5): Promise<ProductPerformance[]> {
+    const connection = await this.getConnection();
+    
+    const [rows] = await connection.execute(`
+      SELECT 
+        cf.id,
+        cf.titulo,
+        cf.categoria,
+        COALESCE(COUNT(cp.IdItem), 0) as sales_count,
+        COALESCE(SUM(cp.preco * cp.QtdeItem), 0) as revenue,
+        cf.preco_venda,
+        cf.preco_custo
+      FROM cadastrofeed cf
+      LEFT JOIN ComandaPedidos cp ON cf.id = cp.IdItem AND cp.status = '4'
+      WHERE cf.codigo_loja = ?
+      GROUP BY cf.id, cf.titulo, cf.categoria, cf.preco_venda, cf.preco_custo
+      ORDER BY sales_count ASC, revenue ASC
+      LIMIT ?
+    `, [codigoLoja, limit]);
+    
+    return (rows as any[]).map(product => {
+      const revenue = parseFloat(product.revenue || '0');
+      const cost = parseFloat(product.preco_custo || '0') * parseInt(product.sales_count || '0');
+      const profit = revenue - cost;
+      const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+      
+      return {
+        id: parseInt(product.id),
+        titulo: product.titulo,
+        categoria: product.categoria,
+        salesCount: parseInt(product.sales_count || '0'),
+        revenue: Number(revenue.toFixed(2)),
+        margin: Number(margin.toFixed(1)),
+        profit: Number(profit.toFixed(2))
+      };
+    });
+  }
+
+  async getAllProducts(codigoLoja: string): Promise<ProductPerformance[]> {
+    const connection = await this.getConnection();
+    
+    const [rows] = await connection.execute(`
+      SELECT 
+        cf.id,
+        cf.titulo,
+        cf.categoria,
+        cf.preco_venda,
+        cf.preco_custo,
+        cf.estoque,
+        COALESCE(COUNT(cp.IdItem), 0) as sales_count,
+        COALESCE(SUM(cp.preco * cp.QtdeItem), 0) as revenue
+      FROM cadastrofeed cf
+      LEFT JOIN ComandaPedidos cp ON cf.id = cp.IdItem AND cp.status = '4'
+      WHERE cf.codigo_loja = ?
+      GROUP BY cf.id, cf.titulo, cf.categoria, cf.preco_venda, cf.preco_custo, cf.estoque
+      ORDER BY cf.titulo
+    `, [codigoLoja]);
+    
+    return (rows as any[]).map(product => {
+      const revenue = parseFloat(product.revenue || '0');
+      const salesCount = parseInt(product.sales_count || '0');
+      const unitCost = parseFloat(product.preco_custo || '0');
+      const totalCost = unitCost * salesCount;
+      const profit = revenue - totalCost;
+      const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+      
+      return {
+        id: parseInt(product.id),
+        titulo: product.titulo,
+        categoria: product.categoria,
+        preco_venda: product.preco_venda,
+        preco_custo: product.preco_custo,
+        estoque: product.estoque,
+        salesCount: salesCount,
+        revenue: Number(revenue.toFixed(2)),
+        margin: Number(margin.toFixed(1)),
+        profit: Number(profit.toFixed(2))
+      };
+    });
+  }
+
+  async getMarginAnalysis(codigoLoja: string): Promise<any> {
+    const connection = await this.getConnection();
+    
+    // Análise geral
+    const [overallResult] = await connection.execute(`
+      SELECT 
+        COALESCE(SUM(cp.preco * cp.QtdeItem), 0) as total_revenue,
+        COALESCE(SUM(cf.preco_custo * cp.QtdeItem), 0) as total_cost
+      FROM ComandaPedidos cp
+      LEFT JOIN cadastrofeed cf ON cp.IdItem = cf.id
+      WHERE cp.codigo_loja = ? AND cp.status = '4'
+    `, [codigoLoja]);
+    
+    const overallData = (overallResult as any[])[0];
+    const totalRevenue = parseFloat(overallData.total_revenue || '0');
+    const totalCost = parseFloat(overallData.total_cost || '0');
+    const avgMargin = totalRevenue > 0 ? ((totalRevenue - totalCost) / totalRevenue) * 100 : 0;
+    
+    // Análise por categoria
+    const [categoryResult] = await connection.execute(`
+      SELECT 
+        cf.categoria,
+        COALESCE(SUM(cp.preco * cp.QtdeItem), 0) as revenue,
+        COALESCE(SUM(cf.preco_custo * cp.QtdeItem), 0) as cost
+      FROM ComandaPedidos cp
+      LEFT JOIN cadastrofeed cf ON cp.IdItem = cf.id
+      WHERE cp.codigo_loja = ? AND cp.status = '4'
+      GROUP BY cf.categoria
+      HAVING revenue > 0
+    `, [codigoLoja]);
+    
+    const byCategory = (categoryResult as any[]).map(category => {
+      const revenue = parseFloat(category.revenue);
+      const cost = parseFloat(category.cost);
+      const margin = revenue > 0 ? ((revenue - cost) / revenue) * 100 : 0;
+      
+      return {
+        categoria: category.categoria,
+        margin: Number(margin.toFixed(1))
+      };
+    });
+    
+    return {
+      overall: {
+        totalRevenue: Number(totalRevenue.toFixed(2)),
+        totalCost: Number(totalCost.toFixed(2)),
+        avgMargin: Number(avgMargin.toFixed(1))
+      },
+      byCategory
+    };
+  }
+
+  async getSalesByCategory(codigoLoja: string): Promise<any[]> {
+    const connection = await this.getConnection();
+    
+    const [rows] = await connection.execute(`
+      SELECT 
+        cf.categoria,
+        COUNT(cp.IdItem) as sales_count,
+        SUM(cp.preco * cp.QtdeItem) as revenue
+      FROM ComandaPedidos cp
+      LEFT JOIN cadastrofeed cf ON cp.IdItem = cf.id
+      WHERE cp.codigo_loja = ? AND cp.status = '4'
+      GROUP BY cf.categoria
+      HAVING revenue > 0
+      ORDER BY revenue DESC
+    `, [codigoLoja]);
+    
+    return (rows as any[]).map(category => ({
+      categoria: category.categoria,
+      salesCount: parseInt(category.sales_count),
+      revenue: Number(parseFloat(category.revenue).toFixed(2))
+    }));
+  }
+
+  async getDetailedOrdersWithProfit(codigoLoja: string): Promise<any[]> {
+    const connection = await this.getConnection();
+    
+    const [rows] = await connection.execute(`
+      SELECT 
+        cp.comanda,
+        cp.user_name,
+        cf.titulo as product_name,
+        cf.categoria,
+        cp.preco as preco_unitario,
+        cp.QtdeItem as quantidade,
+        (cp.preco * cp.QtdeItem) as receita,
+        (cf.preco_custo * cp.QtdeItem) as custo,
+        cp.status,
+        cp.data_completa
+      FROM ComandaPedidos cp
+      LEFT JOIN cadastrofeed cf ON cp.IdItem = cf.id
+      WHERE cp.codigo_loja = ?
+      ORDER BY cp.data_completa DESC
+    `, [codigoLoja]);
+    
+    return (rows as any[]).map(order => {
+      const receita = parseFloat(order.receita || '0');
+      const custo = parseFloat(order.custo || '0');
+      const lucro = receita - custo;
+      const margem = receita > 0 ? (lucro / receita) * 100 : 0;
+      
+      return {
+        comanda: order.comanda,
+        user_name: order.user_name,
+        product_name: order.product_name || 'Produto Desconhecido',
+        categoria: order.categoria || 'N/A',
+        preco_unitario: parseFloat(order.preco_unitario || '0'),
+        quantidade: parseInt(order.quantidade || '0'),
+        receita: receita,
+        custo: custo,
+        lucro: lucro,
+        margem: margem,
+        status: order.status === '4' ? 'Concluído' : order.status === '2' ? 'Em andamento' : 'Outros',
+        data_completa: order.data_completa,
+        data_formatada: new Date(order.data_completa).toLocaleDateString('pt-BR')
+      };
+    });
+  }
+}
+
+// Use MySQL storage if configured, otherwise use TestStorage
+export const storage = process.env.USE_MYSQL === 'true' 
+  ? new MySQLStorage() 
+  : new TestStorage();

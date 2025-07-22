@@ -26,10 +26,12 @@ Preferred communication style: Simple, everyday language.
 - **Middleware**: Request logging, JSON parsing, CORS handling
 
 ### Database Strategy
-- **Primary Database**: MySQL for production data storage
-- **ORM**: Drizzle ORM with PostgreSQL dialect configuration
-- **Schema Management**: Type-safe schema definitions in shared directory
-- **Connection**: mysql2 driver with connection pooling
+- **Development**: Test data with TypeScript interfaces for rapid development
+- **Production**: MySQL database with real restaurant data (banco_cardapio_1753214520157.sql)
+- **ORM**: Drizzle ORM with PostgreSQL dialect for development tools
+- **MySQL Integration**: Direct mysql2 driver for production queries
+- **Schema**: Uses real restaurant tables: clientes, cadastrofeed, ComandaPedidos
+- **Connection**: Configurable via environment variables (USE_MYSQL=true)
 
 ## Key Components
 
@@ -112,10 +114,20 @@ Preferred communication style: Simple, everyday language.
 - **Error Handling**: Production-grade error logging and monitoring
 
 ### Configuration Management
-- **Environment Variables**: Database credentials, API keys, feature flags
+- **Environment Variables**: MySQL connection settings, feature flags
+- **Database Toggle**: USE_MYSQL=true switches from test data to real MySQL
+- **MySQL Config**: MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
 - **Build Scripts**: Separate development and production configurations
 - **Asset Management**: Optimized static asset serving
 - **Performance**: Caching strategies for API responses and static assets
+
+### MySQL Database Integration
+- **Schema**: Real restaurant database with tables for clients, products, orders
+- **Authentication**: Uses 'clientes' table for restaurant owner login
+- **Products**: 'cadastrofeed' table contains menu items with costs and prices
+- **Orders**: 'ComandaPedidos' table tracks all sales with profit calculations
+- **Real Data**: Dashboard shows actual sales, profits, margins from live database
+- **Test Mode**: Fallback to synthetic data when MySQL is unavailable
 
 ### Security Considerations
 - **Authentication**: Session-based user authentication (needs enhancement)

@@ -56,13 +56,17 @@ function App() {
 
   console.log("App - user state changed:", user);
 
+  const handleSetUser = (newUser: Cliente | null) => {
+    console.log("App - setUser called with:", newUser);
+    setUser(newUser);
+  };
+
   const contextValue = { 
     user, 
-    setUser: (newUser: Cliente | null) => {
-      console.log("App - setUser called with:", newUser);
-      setUser(newUser);
-    }
+    setUser: handleSetUser
   };
+
+  console.log("App - providing context value:", contextValue);
 
   return (
     <QueryClientProvider client={queryClient}>

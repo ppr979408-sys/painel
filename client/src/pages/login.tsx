@@ -14,7 +14,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { setUser } = useAuth();
+  const authContext = useAuth();
+  
+  console.log("LoginPage - authContext:", authContext);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,12 +32,18 @@ export default function LoginPage() {
       
       if (data.success) {
         console.log("Login success - setting user:", data.user);
-        setUser(data.user);
+        console.log("Login success - authContext.setUser:", authContext.setUser);
+        authContext.setUser(data.user);
         toast({
           title: "Login realizado com sucesso!",
           description: `Bem-vindo, ${data.user.nome}!`,
         });
         console.log("Login success - user set, should redirect now");
+        
+        // Force a small delay to ensure state update
+        setTimeout(() => {
+          console.log("After timeout - authContext.user:", authContext.user);
+        }, 100);
       } else {
         toast({
           title: "Erro no login",

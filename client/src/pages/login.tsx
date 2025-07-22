@@ -29,11 +29,13 @@ export default function LoginPage() {
       const data = await response.json();
       
       if (data.success) {
+        console.log("Login success - setting user:", data.user);
         setUser(data.user);
         toast({
           title: "Login realizado com sucesso!",
           description: `Bem-vindo, ${data.user.nome}!`,
         });
+        console.log("Login success - user set, should redirect now");
       } else {
         toast({
           title: "Erro no login",

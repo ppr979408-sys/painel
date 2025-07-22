@@ -18,6 +18,9 @@ import type { DashboardMetrics, SalesData, ProductPerformance } from "@shared/sc
 export default function DashboardPage() {
   const { user } = useAuth();
   
+  console.log("Dashboard - user:", user);
+  console.log("Dashboard - rendering dashboard page");
+  
   const { data: metrics, isLoading: metricsLoading } = useQuery<DashboardMetrics>({
     queryKey: ["/api/dashboard/metrics", user?.codigo_loja],
     enabled: !!user?.codigo_loja,

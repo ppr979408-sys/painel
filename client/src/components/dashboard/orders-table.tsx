@@ -9,9 +9,10 @@ import { useAuth } from "@/App";
 export default function OrdersTable() {
   const { user } = useAuth();
   
-  const { data: orders, isLoading } = useQuery({
+  const { data: orders = [], isLoading } = useQuery({
     queryKey: ["/api/orders/recent", user?.codigo_loja],
     enabled: !!user?.codigo_loja,
+    queryFn: () => fetch(`/api/orders/recent/${user?.codigo_loja}`).then(res => res.json()),
   });
 
   const getStatusBadge = (status: string) => {
@@ -59,7 +60,7 @@ export default function OrdersTable() {
                   </TableCell>
                 </TableRow>
               ) : orders && orders.length > 0 ? (
-                orders.map((order) => (
+                orders.map((order: any) => (
                   <TableRow key={order.comanda} className="hover:bg-gray-50">
                     <TableCell className="font-medium">#{order.comanda}</TableCell>
                     <TableCell>{order.user_name}</TableCell>

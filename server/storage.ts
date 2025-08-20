@@ -37,8 +37,10 @@ export class MySQLStorage implements IStorage {
           user: process.env.MYSQL_USER,
           password: process.env.MYSQL_PASSWORD,
           database: process.env.MYSQL_DATABASE,
-          port: 3306,
-          connectTimeout: 30000
+          port: parseInt(process.env.MYSQL_PORT || '3306'),
+          connectTimeout: 60000,
+          acquireTimeout: 60000,
+          timeout: 60000
         });
         
         // Test the connection

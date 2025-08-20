@@ -10,6 +10,7 @@ import SalesPage from "@/pages/sales";
 import ProductsPage from "@/pages/products";
 import ProfitsPage from "@/pages/profits";
 import ReportsPage from "@/pages/reports";
+import ConnectionTestPage from "@/pages/ConnectionTestPage";
 import NotFound from "@/pages/not-found";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 
@@ -18,22 +19,29 @@ function Router() {
 
   console.log("Router - user state:", user);
 
-  if (!user) {
-    console.log("Router - No user, showing LoginPage");
-    return <LoginPage />;
-  }
-
-  console.log("Router - User authenticated, showing dashboard routes");
   return (
     <Switch>
-      <Route path="/" component={DashboardPage} />
-      <Route path="/dashboard" component={DashboardPage} />
-      <Route path="/dashboard-simple" component={SimpleDashboardPage} />
-      <Route path="/sales" component={SalesPage} />
-      <Route path="/products" component={ProductsPage} />
-      <Route path="/profits" component={ProfitsPage} />
-      <Route path="/reports" component={ReportsPage} />
-      <Route component={NotFound} />
+      {/* Public routes */}
+      <Route path="/conexao" component={ConnectionTestPage} />
+      
+      {/* Authentication guard */}
+      {!user ? (
+        <>
+          <Route path="/" component={LoginPage} />
+          <Route component={LoginPage} />
+        </>
+      ) : (
+        <>
+          <Route path="/" component={DashboardPage} />
+          <Route path="/dashboard" component={DashboardPage} />
+          <Route path="/dashboard-simple" component={SimpleDashboardPage} />
+          <Route path="/sales" component={SalesPage} />
+          <Route path="/products" component={ProductsPage} />
+          <Route path="/profits" component={ProfitsPage} />
+          <Route path="/reports" component={ReportsPage} />
+          <Route component={NotFound} />
+        </>
+      )}
     </Switch>
   );
 }

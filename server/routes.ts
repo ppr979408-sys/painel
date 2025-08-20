@@ -22,6 +22,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Database connection test endpoint
+  app.get("/api/test-connection", async (req, res) => {
+    try {
+      const connection = await (storage as any).getConnection();
+      const [rows] = await connection.execute('SELECT 1 as test, NOW() as timestamp');
+      
+      // Test specific tables
+      const [clientesCount] = await connection.execute('SELECT COUNT(*) as count FROM acesso_cliente');
+      const [produtosCount] = await connection.execute('SELECT COUNT(*) as count FROM cadastrofeed');
+      const [pedidosCount] = await connection.execute('SELECT COUNT(*) as count FROM ComandaPedidos');
+      
+      res.json({ 
+        success: true, 
+        message: "Conexão MySQL InfinityFree funcionando!", 
+        data: {
+          test: (rows as any[])[0],
+          tables: {
+            acesso_cliente: (clientesCount as any[])[0].count,
+            cadastrofeed: (produtosCount as any[])[0].count,
+            ComandaPedidos: (pedidosCount as any[])[0].count
+          },
+          host: process.env.MYSQL_HOST,
+          database: process.env.MYSQL_DATABASE
+        }
+      });
+    } catch (error) {
+      console.error('Database connection test failed:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Erro na conexão com MySQL", 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        host: process.env.MYSQL_HOST,
+        database: process.env.MYSQL_DATABASE
+      });
+    }
+  });
+
   // Dashboard metrics
   app.get("/api/dashboard/metrics/:codigoLoja", async (req, res) => {
     try {

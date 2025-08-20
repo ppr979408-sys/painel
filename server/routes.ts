@@ -73,28 +73,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const [pedidosResult] = await connection.execute('SELECT COUNT(*) as count FROM ComandaPedidos');
       
       res.json({
+        success: true,
         status: "connected",
         message: "MySQL InfinityFree conectado com sucesso",
-        connection_info: (rows as any[])[0],
-        tables_status: {
-          acesso_cliente: (clientesResult as any[])[0].count,
-          cadastrofeed: (feedResult as any[])[0].count,
-          ComandaPedidos: (pedidosResult as any[])[0].count
-        },
-        database_config: {
-          host: process.env.MYSQL_HOST,
-          database: process.env.MYSQL_DATABASE,
-          user: process.env.MYSQL_USER
+        host: process.env.MYSQL_HOST,
+        database: process.env.MYSQL_DATABASE,
+        data: {
+          test: {
+            connection_id: (rows as any[])[0].connection_id,
+            timestamp: (rows as any[])[0].server_time
+          },
+          tables: {
+            acesso_cliente: (clientesResult as any[])[0].count,
+            cadastrofeed: (feedResult as any[])[0].count,
+            ComandaPedidos: (pedidosResult as any[])[0].count
+          }
         }
       });
     } catch (error) {
+      console.error('❌ Database connection error:', error);
+      console.error('🔸 Error message:', (error as any).message);
+      console.error('🔸 Error code:', (error as any).code);
+      console.error('🔸 Error errno:', (error as any).errno);
+      
+      // Check if it's a DNS/network issue or credential issue
+      const errorCode = (error as any).code;
+      let specificMessage = '';
+      let troubleshootingNotes = [];
+      
+      if (errorCode === 'ENOTFOUND') {
+        specificMessage = 'Servidor MySQL não encontrado. Verifique se sql100.infinityfree.com está acessível.';
+        troubleshootingNotes = [
+          'Verifique se o domínio sql100.infinityfree.com está correto',
+          'Teste conectividade de rede do servidor Render',
+          'Confirme se o InfinityFree não bloqueou conexões do seu IP'
+        ];
+      } else if (errorCode === 'ECONNREFUSED') {
+        specificMessage = 'Conexão recusada pelo servidor MySQL. Porta ou serviço indisponível.';
+        troubleshootingNotes = [
+          'Verifique se o MySQL está rodando no InfinityFree',
+          'Confirme se a porta 3306 está aberta',
+          'Verifique status do servidor no painel InfinityFree'
+        ];
+      } else if (errorCode === 'ER_ACCESS_DENIED_ERROR') {
+        specificMessage = 'Credenciais MySQL incorretas ou usuário sem permissão.';
+        troubleshootingNotes = [
+          'Verifique MYSQL_USER e MYSQL_PASSWORD no Render',
+          'Confirme se o usuário tem acesso ao database if0_39752118_menu',
+          'Teste as credenciais diretamente no phpMyAdmin'
+        ];
+      } else {
+        specificMessage = `Erro de conexão: ${(error as any).message}`;
+        troubleshootingNotes = [
+          'Verifique todas as variáveis de ambiente MySQL',
+          'Teste conectividade manual com as credenciais',
+          'Consulte logs do InfinityFree para mais detalhes'
+        ];
+      }
+      
       res.status(503).json({
+        success: false,
         status: "connection_error",
-        message: error instanceof Error ? error.message : "Erro desconhecido na conexão",
+        message: process.env.NODE_ENV === "development" 
+          ? "Cannot connect to InfinityFree MySQL in development environment. Application will work correctly when deployed to production."
+          : specificMessage,
         environment: process.env.NODE_ENV || "development",
+        error_details: {
+          code: (error as any).code,
+          errno: (error as any).errno,
+          sqlState: (error as any).sqlState,
+          original_message: (error as any).message
+        },
+        config_check: {
+          host_configured: !!process.env.MYSQL_HOST,
+          user_configured: !!process.env.MYSQL_USER,
+          password_configured: !!process.env.MYSQL_PASSWORD,
+          database_configured: !!process.env.MYSQL_DATABASE,
+          host_value: process.env.MYSQL_HOST || 'não configurado',
+          database_value: process.env.MYSQL_DATABASE || 'não configurado'
+        },
+        troubleshooting: troubleshootingNotes,
         note: process.env.NODE_ENV === "development" 
           ? "InfinityFree MySQL requer deployment em produção para funcionar" 
-          : "Verifique credenciais e status do servidor MySQL"
+          : "Sistema detectou problema específico - verifique as sugestões de troubleshooting acima"
       });
     }
   });

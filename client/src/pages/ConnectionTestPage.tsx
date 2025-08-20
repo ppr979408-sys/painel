@@ -170,6 +170,30 @@ export default function ConnectionTestPage() {
                     {(databaseStatus as any).message}
                   </p>
                   
+                  {(databaseStatus as any).troubleshooting && (
+                    <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+                      <h4 className="font-medium text-red-800 dark:text-red-200 mb-2">
+                        🔧 Possíveis Soluções
+                      </h4>
+                      <ul className="text-sm text-red-700 dark:text-red-300 space-y-1">
+                        {(databaseStatus as any).troubleshooting.map((note: string, index: number) => (
+                          <li key={index}>• {note}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {(databaseStatus as any).config_check && (
+                    <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-md">
+                      <h4 className="font-medium mb-2">Configurações Detectadas</h4>
+                      <div className="text-sm space-y-1">
+                        <p><strong>Host:</strong> {(databaseStatus as any).config_check.host_value}</p>
+                        <p><strong>Database:</strong> {(databaseStatus as any).config_check.database_value}</p>
+                        <p><strong>Erro:</strong> {(databaseStatus as any).error_details?.code || 'Desconhecido'}</p>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
                     <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2">
                       ℹ️ Como Testar no Render

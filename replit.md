@@ -127,6 +127,8 @@ Preferred communication style: Simple, everyday language.
 - **Orders**: 'ComandaPedidos' table tracks actual sales with profit calculations
 - **Live Analytics**: Dashboard displays real-time data from production database
 - **Production Deployment**: System configured to work only when properly deployed
+- **Connection Test Page**: /conexao route provides detailed database diagnostics and troubleshooting
+- **Error Handling**: Enhanced error reporting with specific MySQL connection troubleshooting guides
 
 ### Security Considerations
 - **Authentication**: Session-based user authentication (needs enhancement)

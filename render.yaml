@@ -2,15 +2,14 @@ services:
   - type: web
     name: restaurant-dashboard
     env: node
+    runtime: node
     plan: free
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     startCommand: npm start
     healthCheckPath: /
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
       - key: MYSQL_HOST
         fromSecret: MYSQL_HOST
       - key: MYSQL_USER

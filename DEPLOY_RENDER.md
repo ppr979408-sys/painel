@@ -6,6 +6,8 @@
 - Certifique-se de que todos os arquivos estão commitados
 - O arquivo `render.yaml` já está configurado
 - O projeto foi configurado para usar apenas MySQL (sem fallback)
+- Arquivo `Dockerfile` criado para compatibilidade com Render
+- Arquivo `.node-version` especifica Node.js 18
 
 ### 2. Configurar Variáveis de Ambiente no Render
 
@@ -102,6 +104,12 @@ Após o deploy:
 
 ### 7. Troubleshooting
 
+**Erro "no such file or directory" Dockerfile:**
+✅ **RESOLVIDO** - Adicionado Dockerfile e configurações para compatibilidade
+- O projeto agora inclui Dockerfile funcional
+- Arquivo .node-version especifica versão do Node.js 18
+- render.yaml atualizado com configurações corretas
+
 **Erro de Conexão MySQL:**
 - Verificar se as variáveis de ambiente estão corretas
 - Confirmar se o host do InfinityFree permite conexões externas
@@ -110,6 +118,7 @@ Após o deploy:
 **Erro de Build:**
 - Verificar se todas as dependências estão no package.json
 - Confirmar se os scripts de build estão corretos
+- Build testado com sucesso: ✅ Frontend + Backend compilados
 
 **Erro de Timeout:**
 - O InfinityFree pode ter limitações de tempo de conexão

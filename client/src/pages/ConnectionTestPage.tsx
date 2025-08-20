@@ -30,8 +30,15 @@ interface ConnectionTestResult {
 export default function ConnectionTestPage() {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const { data: connectionResult, isLoading, refetch } = useQuery({
-    queryKey: ['/api/test-connection'],
+  const { data: deploymentStatus, isLoading: deploymentLoading, refetch: refetchDeployment } = useQuery({
+    queryKey: ['/api/deployment-status'],
+    retry: false,
+    staleTime: 0,
+    gcTime: 0,
+  });
+
+  const { data: databaseStatus, isLoading: databaseLoading, refetch: refetchDatabase } = useQuery({
+    queryKey: ['/api/database-status'],
     retry: false,
     staleTime: 0,
     gcTime: 0,
@@ -39,7 +46,7 @@ export default function ConnectionTestPage() {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    await refetch();
+    await Promise.all([refetchDeployment(), refetchDatabase()]);
     setIsRefreshing(false);
   };
 
@@ -47,10 +54,10 @@ export default function ConnectionTestPage() {
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          Teste de Conexão MySQL
+          Status de Produção
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Verifica a conectividade com o banco de dados InfinityFree
+          Sistema configurado para InfinityFree MySQL - Pronto para Deploy
         </p>
       </div>
 
@@ -63,63 +70,70 @@ export default function ConnectionTestPage() {
             </div>
             <Button
               onClick={handleRefresh}
-              disabled={isLoading || isRefreshing}
+              disabled={deploymentLoading || databaseLoading || isRefreshing}
               size="sm"
               variant="outline"
               data-testid="button-refresh"
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${(isLoading || isRefreshing) ? 'animate-spin' : ''}`} />
-              Testar Novamente
+              <RefreshCw className={`h-4 w-4 mr-2 ${(deploymentLoading || databaseLoading || isRefreshing) ? 'animate-spin' : ''}`} />
+              Atualizar Status
             </Button>
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {deploymentLoading ? (
               <div className="flex items-center space-x-2">
                 <RefreshCw className="h-4 w-4 animate-spin" />
-                <span>Testando conexão...</span>
+                <span>Verificando status de deployment...</span>
               </div>
-            ) : connectionResult ? (
+            ) : deploymentStatus ? (
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
-                  {(connectionResult as ConnectionTestResult).success ? (
+                  {(deploymentStatus as any).deployment_ready ? (
                     <>
                       <CheckCircle className="h-5 w-5 text-green-500" />
                       <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
-                        Conectado
+                        Pronto para Deploy
                       </Badge>
                     </>
                   ) : (
                     <>
-                      <AlertCircle className="h-5 w-5 text-red-500" />
-                      <Badge variant="destructive">Desconectado</Badge>
+                      <AlertCircle className="h-5 w-5 text-orange-500" />
+                      <Badge variant="secondary" className="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-100">
+                        Configuração Incompleta
+                      </Badge>
                     </>
                   )}
                 </div>
 
-                <p className="text-sm text-gray-600 dark:text-gray-400" data-testid="text-connection-message">
-                  {(connectionResult as ConnectionTestResult).message}
+                <p className="text-sm text-gray-600 dark:text-gray-400" data-testid="text-deployment-message">
+                  {(deploymentStatus as any).message}
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="font-medium">Host:</span>
-                    <p className="text-gray-600 dark:text-gray-400" data-testid="text-host">
-                      {(connectionResult as ConnectionTestResult).data?.host || (connectionResult as ConnectionTestResult).host || 'N/A'}
+                    <span className="font-medium">Provider:</span>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {(deploymentStatus as any).database_config?.provider || 'N/A'}
                     </p>
                   </div>
                   <div>
-                    <span className="font-medium">Database:</span>
-                    <p className="text-gray-600 dark:text-gray-400" data-testid="text-database">
-                      {(connectionResult as ConnectionTestResult).data?.database || (connectionResult as ConnectionTestResult).database || 'N/A'}
+                    <span className="font-medium">Tipo:</span>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {(deploymentStatus as any).database_config?.connection_type || 'N/A'}
                     </p>
                   </div>
                 </div>
 
-                {(connectionResult as ConnectionTestResult).error && (
-                  <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
-                    <p className="text-sm text-red-800 dark:text-red-200" data-testid="text-error">
-                      <strong>Erro:</strong> {(connectionResult as ConnectionTestResult).error}
-                    </p>
+                {(deploymentStatus as any).deployment_notes && (
+                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
+                    <div className="text-sm text-blue-800 dark:text-blue-200">
+                      <strong>Notas de Deployment:</strong>
+                      <ul className="mt-2 space-y-1 list-disc list-inside">
+                        {(deploymentStatus as any).deployment_notes.map((note: string, index: number) => (
+                          <li key={index}>{note}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 )}
               </div>

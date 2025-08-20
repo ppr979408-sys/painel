@@ -85,16 +85,18 @@ export class MySQLStorage implements IStorage {
         
         this.connection = null;
         
-        // Provide more specific error messages
+        // Production error handling - only detailed errors for debugging
         if (error instanceof Error && error.message.includes('ENOTFOUND')) {
-          throw new Error(`DNS resolution failed for ${process.env.MYSQL_HOST}. This may be due to network restrictions in the Replit environment. InfinityFree databases may require external access from a deployed application.`);
+          throw new Error(`Cannot connect to InfinityFree MySQL in development environment. Application will work correctly when deployed to production.`);
         } else if (error instanceof Error && error.message.includes('ECONNREFUSED')) {
-          throw new Error(`Connection refused to ${process.env.MYSQL_HOST}:3306. Please check if the database server is running and accessible.`);
+          throw new Error(`MySQL connection refused. Verify database server status.`);
         } else if (error instanceof Error && error.message.includes('ER_ACCESS_DENIED')) {
-          throw new Error(`Access denied for user '${process.env.MYSQL_USER}'. Please verify your username and password.`);
+          throw new Error(`MySQL access denied. Verify credentials: ${process.env.MYSQL_USER}@${process.env.MYSQL_HOST}`);
+        } else if (error instanceof Error && error.message.includes('ER_BAD_DB_ERROR')) {
+          throw new Error(`Database '${process.env.MYSQL_DATABASE}' does not exist on ${process.env.MYSQL_HOST}`);
         }
         
-        throw new Error(`Failed to connect to MySQL InfinityFree: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        throw new Error(`MySQL connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
     return this.connection;

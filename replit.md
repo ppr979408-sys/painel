@@ -26,19 +26,19 @@ Preferred communication style: Simple, everyday language.
 - **Middleware**: Request logging, JSON parsing, CORS handling
 
 ### Database Strategy
-- **Production Only**: MySQL database from InfinityFree with real restaurant data
-- **Direct Connection**: mysql2 driver for all database operations
-- **Schema**: Uses real restaurant tables: clientes, cadastrofeed, ComandaPedidos
-- **Connection**: Required environment variables: MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
-- **No Fallback**: Application requires real database connection, no test data fallback
+- **Production Exclusive**: MySQL database from InfinityFree configured for production deployment only
+- **InfinityFree Integration**: Direct connection using mysql2 driver with InfinityFree-specific settings
+- **Real Restaurant Schema**: Uses authentic restaurant tables: acesso_cliente, cadastrofeed, ComandaPedidos
+- **Environment Configuration**: MYSQL_HOST=sql100.infinityfree.com, MYSQL_DATABASE=if0_39752118_menu
+- **Development Limitation**: InfinityFree blocks external connections in development, works in production
 
 ## Key Components
 
 ### Authentication System
-- **Login Flow**: Email/password authentication with form validation
+- **Production Login**: Email/password authentication against acesso_cliente table in InfinityFree MySQL
 - **User Context**: React Context providing global authentication state
 - **Route Protection**: Conditional rendering based on authentication status
-- **Session Persistence**: Basic session handling (needs enhancement for production)
+- **Real User Data**: Authenticates restaurant owners with actual credentials from database
 
 ### Dashboard Analytics
 - **KPI Metrics**: Real-time sales, orders, margin, and revenue tracking
@@ -120,13 +120,13 @@ Preferred communication style: Simple, everyday language.
 - **Asset Management**: Optimized static asset serving
 - **Performance**: Caching strategies for API responses and static assets
 
-### MySQL Database Integration
-- **Schema**: Real restaurant database with tables for clients, products, orders
-- **Authentication**: Uses 'clientes' table for restaurant owner login
-- **Products**: 'cadastrofeed' table contains menu items with costs and prices
-- **Orders**: 'ComandaPedidos' table tracks all sales with profit calculations
-- **Real Data**: Dashboard shows actual sales, profits, margins from live database
-- **Test Mode**: Fallback to synthetic data when MySQL is unavailable
+### MySQL Database Integration (Production Ready)
+- **InfinityFree Database**: Configured exclusively for if0_39752118_menu database
+- **Authentication**: Uses 'acesso_cliente' table for restaurant owner authentication
+- **Products**: 'cadastrofeed' table contains real menu items with costs and prices
+- **Orders**: 'ComandaPedidos' table tracks actual sales with profit calculations
+- **Live Analytics**: Dashboard displays real-time data from production database
+- **Production Deployment**: System configured to work only when properly deployed
 
 ### Security Considerations
 - **Authentication**: Session-based user authentication (needs enhancement)

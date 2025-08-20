@@ -1,0 +1,44 @@
+index-CyB6A2Fc.js:208 AuthProvider - user state: null
+index-CyB6A2Fc.js:208 AuthProvider - providing value: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:333 Router - user state: null
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-CyB6A2Fc.js:48  POST https://painel-a80o.onrender.com/api/auth/login 400 (Bad Request)
+II @ index-CyB6A2Fc.js:48
+l @ index-CyB6A2Fc.js:208
+Nk @ index-CyB6A2Fc.js:37
+kk @ index-CyB6A2Fc.js:37
+Mk @ index-CyB6A2Fc.js:37
+jb @ index-CyB6A2Fc.js:37
+uE @ index-CyB6A2Fc.js:37
+(anonymous) @ index-CyB6A2Fc.js:37
+a0 @ index-CyB6A2Fc.js:40
+kj @ index-CyB6A2Fc.js:37
+Ah @ index-CyB6A2Fc.js:37
+Mg @ index-CyB6A2Fc.js:37
+Yk @ index-CyB6A2Fc.js:37
+index-CyB6A2Fc.js:208 LoginPage - authContext: {user: null, setUser: ƒ}

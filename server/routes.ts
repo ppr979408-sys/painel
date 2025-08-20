@@ -319,6 +319,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/orders/detailed/:codigoLoja", async (req, res) => {
     try {
       const { codigoLoja } = req.params;
+      
+      if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+        // Demo detailed orders with profit calculations for development
+        const demoDetailedOrders = [
+          { 
+            comanda: "Mesa 5", 
+            user_name: "João Silva", 
+            items: "2x Pizza Margherita", 
+            total: 91.80, 
+            profit: 54.70, 
+            margin: 59.6, 
+            status: "Entregue" 
+          },
+          { 
+            comanda: "Mesa 3", 
+            user_name: "Maria Santos", 
+            items: "1x Hambúrguer Artesanal", 
+            total: 32.50, 
+            profit: 17.30, 
+            margin: 53.2, 
+            status: "Preparando" 
+          },
+          { 
+            comanda: "Balcão", 
+            user_name: "Pedro Costa", 
+            items: "1x Salada Caesar", 
+            total: 28.90, 
+            profit: 16.60, 
+            margin: 57.4, 
+            status: "Entregue" 
+          }
+        ];
+        res.json(demoDetailedOrders);
+        return;
+      }
+      
       const orders = await storage.getDetailedOrdersWithProfit(codigoLoja);
       res.json(orders);
     } catch (error) {

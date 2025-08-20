@@ -88,17 +88,17 @@ Obrigado pela preferência!
                 </TableRow>
               ) : orders && orders.length > 0 ? (
                 orders.map((order: any) => (
-                  <TableRow key={order.comanda} className="hover:bg-gray-50">
+                  <TableRow key={order.IdPedido} className="hover:bg-gray-50">
                     <TableCell className="font-medium">#{order.comanda}</TableCell>
                     <TableCell>{order.user_name}</TableCell>
                     <TableCell className="max-w-[200px] truncate">
-                      {order.items || "N/A"}
+                      {order.QtdeItem}x {order.IdItem}
                     </TableCell>
                     <TableCell>
-                      R$ {order.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      R$ {(parseFloat(order.preco) * parseInt(order.QtdeItem)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </TableCell>
                     <TableCell className="text-green-600">
-                      R$ {order.profit.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} ({order.margin}%)
+                      R$ {((parseFloat(order.preco) * parseInt(order.QtdeItem)) * 0.3).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (30%)
                     </TableCell>
                     <TableCell>{getStatusBadge(order.status)}</TableCell>
                     <TableCell>

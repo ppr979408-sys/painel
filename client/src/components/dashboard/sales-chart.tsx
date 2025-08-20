@@ -9,7 +9,10 @@ interface SalesChartProps {
 }
 
 export default function SalesChart({ data }: SalesChartProps) {
-  const formattedData = data.map(item => ({
+  // Protect against undefined or null data
+  const safeData = data || [];
+  
+  const formattedData = safeData.map(item => ({
     ...item,
     date: new Date(item.date).toLocaleDateString('pt-BR', { 
       day: '2-digit', 

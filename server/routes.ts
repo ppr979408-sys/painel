@@ -160,6 +160,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { codigoLoja } = req.params;
       const { period = "7" } = req.query;
+      
+      if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+        // Demo sales data for development
+        const demoSalesData = [
+          { date: "2025-08-14", revenue: 2450.80, orders: 8, margin: 31.2 },
+          { date: "2025-08-15", revenue: 3200.50, orders: 12, margin: 28.5 },
+          { date: "2025-08-16", revenue: 1980.30, orders: 6, margin: 35.1 },
+          { date: "2025-08-17", revenue: 4150.20, orders: 15, margin: 29.8 },
+          { date: "2025-08-18", revenue: 2890.70, orders: 10, margin: 32.4 },
+          { date: "2025-08-19", revenue: 3650.40, orders: 13, margin: 30.7 },
+          { date: "2025-08-20", revenue: 4280.90, orders: 16, margin: 33.2 }
+        ];
+        res.json(demoSalesData);
+        return;
+      }
+      
       const salesData = await storage.getSalesData(codigoLoja, period as string);
       res.json(salesData);
     } catch (error) {
@@ -172,6 +188,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { codigoLoja } = req.params;
       const { limit = "10" } = req.query;
+      
+      if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+        // Demo recent orders for development
+        const demoOrders = [
+          { IdPedido: 1001, comanda: "Mesa 5", user_name: "João Silva", user_id: "1", IdItem: "Pizza Margherita", preco: "45.90", QtdeItem: 2, status: "Entregue", data: "2025-08-20 18:30:00", codigo_loja: "DEMO001", id_loja: "DEMO001" },
+          { IdPedido: 1002, comanda: "Mesa 3", user_name: "Maria Santos", user_id: "2", IdItem: "Hambúrguer Artesanal", preco: "32.50", QtdeItem: 1, status: "Preparando", data: "2025-08-20 18:15:00", codigo_loja: "DEMO001", id_loja: "DEMO001" },
+          { IdPedido: 1003, comanda: "Balcão", user_name: "Pedro Costa", user_id: "3", IdItem: "Salada Caesar", preco: "28.90", QtdeItem: 1, status: "Entregue", data: "2025-08-20 17:45:00", codigo_loja: "DEMO001", id_loja: "DEMO001" }
+        ];
+        res.json(demoOrders.slice(0, parseInt(limit as string)));
+        return;
+      }
+      
       const orders = await storage.getRecentOrders(codigoLoja, parseInt(limit as string));
       res.json(orders);
     } catch (error) {
@@ -184,6 +212,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { codigoLoja } = req.params;
       const { limit = "5" } = req.query;
+      
+      if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+        // Demo top products for development
+        const demoTopProducts = [
+          { id: 1, titulo: "Pizza Margherita", categoria: "Pizzas", salesCount: 45, revenue: 2025.50, preco_venda: "45.00", preco_custo: "18.50", status: "ativo" },
+          { id: 2, titulo: "Hambúrguer Artesanal", categoria: "Hambúrgueres", salesCount: 38, revenue: 1235.00, preco_venda: "32.50", preco_custo: "15.20", status: "ativo" },
+          { id: 3, titulo: "Salada Caesar", categoria: "Saladas", salesCount: 32, revenue: 924.80, preco_venda: "28.90", preco_custo: "12.30", status: "ativo" },
+          { id: 4, titulo: "Lasanha Bolonhesa", categoria: "Massas", salesCount: 28, revenue: 1120.00, preco_venda: "40.00", preco_custo: "16.80", status: "ativo" },
+          { id: 5, titulo: "Frango Grelhado", categoria: "Carnes", salesCount: 25, revenue: 875.00, preco_venda: "35.00", preco_custo: "14.90", status: "ativo" }
+        ];
+        res.json(demoTopProducts.slice(0, parseInt(limit as string)));
+        return;
+      }
+      
       const products = await storage.getTopProducts(codigoLoja, parseInt(limit as string));
       res.json(products);
     } catch (error) {
@@ -196,6 +238,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { codigoLoja } = req.params;
       const { limit = "5" } = req.query;
+      
+      if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+        // Demo low performing products for development
+        const demoLowProducts = [
+          { id: 10, titulo: "Sopa do Dia", categoria: "Sopas", salesCount: 3, revenue: 84.00, preco_venda: "28.00", preco_custo: "9.50", status: "ativo" },
+          { id: 11, titulo: "Torta de Limão", categoria: "Sobremesas", salesCount: 5, revenue: 125.00, preco_venda: "25.00", preco_custo: "8.20", status: "ativo" }
+        ];
+        res.json(demoLowProducts.slice(0, parseInt(limit as string)));
+        return;
+      }
+      
       const products = await storage.getLowPerformingProducts(codigoLoja, parseInt(limit as string));
       res.json(products);
     } catch (error) {
@@ -207,6 +260,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/products/all/:codigoLoja", async (req, res) => {
     try {
       const { codigoLoja } = req.params;
+      
+      if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+        // Demo all products for development
+        const demoAllProducts = [
+          { id: 1, titulo: "Pizza Margherita", preco_venda: "45.00", preco_custo: "18.50", categoria: "Pizzas", descricao: "Pizza clássica com molho de tomate, mussarela e manjericão", estoque: "10", status: "ativo", codigo_loja: "DEMO001", id_loja: "DEMO001" },
+          { id: 2, titulo: "Hambúrguer Artesanal", preco_venda: "32.50", preco_custo: "15.20", categoria: "Hambúrgueres", descricao: "Hambúrguer com carne artesanal, alface, tomate e molho especial", estoque: "8", status: "ativo", codigo_loja: "DEMO001", id_loja: "DEMO001" },
+          { id: 3, titulo: "Salada Caesar", preco_venda: "28.90", preco_custo: "12.30", categoria: "Saladas", descricao: "Salada com alface americana, croutons, parmesão e molho caesar", estoque: "15", status: "ativo", codigo_loja: "DEMO001", id_loja: "DEMO001" }
+        ];
+        res.json(demoAllProducts);
+        return;
+      }
+      
       const products = await storage.getAllProducts(codigoLoja);
       res.json(products);
     } catch (error) {
@@ -218,6 +283,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/margins/:codigoLoja", async (req, res) => {
     try {
       const { codigoLoja } = req.params;
+      
+      if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+        // Demo margin analysis for development
+        const demoMargins = [
+          { categoria: "Pizzas", averageMargin: 58.9, totalRevenue: 2025.50, totalCost: 832.50, count: 45 },
+          { categoria: "Hambúrgueres", averageMargin: 53.2, totalRevenue: 1235.00, totalCost: 577.60, count: 38 },
+          { categoria: "Saladas", averageMargin: 57.4, totalRevenue: 924.80, totalCost: 393.60, count: 32 },
+          { categoria: "Massas", averageMargin: 58.0, totalRevenue: 1120.00, totalCost: 470.40, count: 28 }
+        ];
+        res.json(demoMargins);
+        return;
+      }
+      
       const margins = await storage.getMarginAnalysis(codigoLoja);
       res.json(margins);
     } catch (error) {

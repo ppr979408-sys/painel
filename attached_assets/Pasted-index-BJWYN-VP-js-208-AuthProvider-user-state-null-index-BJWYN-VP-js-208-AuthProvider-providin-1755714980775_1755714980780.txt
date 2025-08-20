@@ -1,0 +1,62 @@
+index-BJWYN-VP.js:208 AuthProvider - user state: null
+index-BJWYN-VP.js:208 AuthProvider - providing value: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:333 Router - user state: null
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:48  POST https://painel-a80o.onrender.com/api/auth/login 400 (Bad Request)
+II @ index-BJWYN-VP.js:48
+l @ index-BJWYN-VP.js:208
+Nk @ index-BJWYN-VP.js:37
+kk @ index-BJWYN-VP.js:37
+Mk @ index-BJWYN-VP.js:37
+jb @ index-BJWYN-VP.js:37
+uE @ index-BJWYN-VP.js:37
+(anonymous) @ index-BJWYN-VP.js:37
+a0 @ index-BJWYN-VP.js:40
+kj @ index-BJWYN-VP.js:37
+Ah @ index-BJWYN-VP.js:37
+Mg @ index-BJWYN-VP.js:37
+Yk @ index-BJWYN-VP.js:37
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}setUser: i=> {…}user: null[[Prototype]]: Object
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:48  POST https://painel-a80o.onrender.com/api/auth/login 400 (Bad Request)
+II @ index-BJWYN-VP.js:48
+l @ index-BJWYN-VP.js:208
+Nk @ index-BJWYN-VP.js:37
+kk @ index-BJWYN-VP.js:37
+Mk @ index-BJWYN-VP.js:37
+jb @ index-BJWYN-VP.js:37
+uE @ index-BJWYN-VP.js:37
+(anonymous) @ index-BJWYN-VP.js:37
+a0 @ index-BJWYN-VP.js:40
+kj @ index-BJWYN-VP.js:37
+Ah @ index-BJWYN-VP.js:37
+Mg @ index-BJWYN-VP.js:37
+Yk @ index-BJWYN-VP.js:37
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}
+index-BJWYN-VP.js:208 LoginPage - authContext: {user: null, setUser: ƒ}setUser: i=> {…}length: 1name: "setUser"arguments: (...)caller: (...)[[FunctionLocation]]: index-BJWYN-VP.js:208[[Prototype]]: ƒ ()[[Scopes]]: Scopes[3]user: null[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()

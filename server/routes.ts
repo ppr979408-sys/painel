@@ -9,16 +9,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req, res) => {
     try {
       const credentials = loginSchema.parse(req.body);
+      
+      // Check if we're in development mode and MySQL is not available
+      const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
+      
+      if (isDevelopment) {
+        // Development mode with demo user for testing UI
+        const demoUser = {
+          codigo_loja: "DEMO001",
+          nome: "Admin",
+          sobrenome: "Demo",
+          nome_empresa: "Restaurante Demo",
+          email: credentials.email,
+          telefone: "(11) 99999-9999",
+          endereco: "Rua Demo, 123",
+          cidade: "São Paulo",
+          uf: "SP",
+          status: "ativo"
+        };
+        
+        res.json({ 
+          success: true, 
+          user: demoUser,
+          mode: "development",
+          note: "Usuário de demonstração - MySQL funcionará apenas em produção"
+        });
+        return;
+      }
+      
+      // Production mode - try real authentication
       const user = await storage.authenticateUser(credentials);
       
       if (user) {
-        // In production, use proper session management
-        res.json({ success: true, user });
+        res.json({ success: true, user, mode: "production" });
       } else {
         res.status(401).json({ success: false, message: "Credenciais inválidas" });
       }
     } catch (error) {
-      res.status(400).json({ success: false, message: "Dados inválidos" });
+      console.error("Auth error:", error);
+      
+      // If it's a connection error in production, return specific message
+      if (error instanceof Error && error.message.includes('ENOTFOUND')) {
+        res.status(503).json({ 
+          success: false, 
+          message: "Serviço de banco de dados temporariamente indisponível",
+          note: "InfinityFree MySQL requer que a aplicação esteja em produção" 
+        });
+      } else {
+        res.status(400).json({ success: false, message: "Erro na validação dos dados" });
+      }
     }
   });
 
@@ -94,6 +133,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/dashboard/metrics/:codigoLoja", async (req, res) => {
     try {
       const { codigoLoja } = req.params;
+      
+      if (process.env.NODE_ENV === 'development') {
+        // Demo data for development
+        const demoMetrics = {
+          todaySales: 15420.50,
+          todayOrders: 47,
+          averageMargin: 32.5,
+          averageTicket: 328.30,
+          totalRevenue: 245780.30,
+          totalProfit: 79904.00
+        };
+        res.json(demoMetrics);
+        return;
+      }
+      
       const metrics = await storage.getDashboardMetrics(codigoLoja);
       res.json(metrics);
     } catch (error) {

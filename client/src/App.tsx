@@ -11,6 +11,7 @@ import ProductsPage from "@/pages/products";
 import ProfitsPage from "@/pages/profits";
 import ReportsPage from "@/pages/reports";
 import ConnectionTestPage from "@/pages/ConnectionTestPage";
+import DeploymentStatusPage from "@/pages/deployment-status";
 import NotFound from "@/pages/not-found";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 
@@ -23,6 +24,7 @@ function Router() {
     <Switch>
       {/* Public routes */}
       <Route path="/conexao" component={ConnectionTestPage} />
+      <Route path="/status" component={DeploymentStatusPage} />
       
       {/* Authentication guard */}
       {!user ? (

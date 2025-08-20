@@ -1,0 +1,70 @@
+index-CyB6A2Fc.js:208 AuthProvider - user state: null
+index-CyB6A2Fc.js:208 AuthProvider - providing value: Object
+index-CyB6A2Fc.js:333 Router - user state: null
+api/test-connection:1  Failed to load resource: the server responded with a status of 500 ()
+api/test-connection:1  Failed to load resource: the server responded with a status of 500 ()
+api/test-connection:1  Failed to load resource: the server responded with a status of 500 ()
+api/test-connection:1  Failed to load resource: the server responded with a status of 500 ()
+index-CyB6A2Fc.js:48  GET https://painel-a80o.onrender.com/api/test-connection 500 (Internal Server Error)
+(anonymous) @ index-CyB6A2Fc.js:48
+o @ index-CyB6A2Fc.js:48
+y @ index-CyB6A2Fc.js:48
+start @ index-CyB6A2Fc.js:48
+fetch @ index-CyB6A2Fc.js:48
+fl @ index-CyB6A2Fc.js:48
+fetch @ index-CyB6A2Fc.js:48
+refetch @ index-CyB6A2Fc.js:48
+o @ index-CyB6A2Fc.js:333
+Nk @ index-CyB6A2Fc.js:37
+kk @ index-CyB6A2Fc.js:37
+Mk @ index-CyB6A2Fc.js:37
+jb @ index-CyB6A2Fc.js:37
+uE @ index-CyB6A2Fc.js:37
+(anonymous) @ index-CyB6A2Fc.js:37
+a0 @ index-CyB6A2Fc.js:40
+kj @ index-CyB6A2Fc.js:37
+Ah @ index-CyB6A2Fc.js:37
+Mg @ index-CyB6A2Fc.js:37
+Yk @ index-CyB6A2Fc.js:37
+index-CyB6A2Fc.js:48  GET https://painel-a80o.onrender.com/api/test-connection 500 (Internal Server Error)
+(anonymous) @ index-CyB6A2Fc.js:48
+o @ index-CyB6A2Fc.js:48
+y @ index-CyB6A2Fc.js:48
+start @ index-CyB6A2Fc.js:48
+fetch @ index-CyB6A2Fc.js:48
+fl @ index-CyB6A2Fc.js:48
+fetch @ index-CyB6A2Fc.js:48
+refetch @ index-CyB6A2Fc.js:48
+o @ index-CyB6A2Fc.js:333
+Nk @ index-CyB6A2Fc.js:37
+kk @ index-CyB6A2Fc.js:37
+Mk @ index-CyB6A2Fc.js:37
+jb @ index-CyB6A2Fc.js:37
+uE @ index-CyB6A2Fc.js:37
+(anonymous) @ index-CyB6A2Fc.js:37
+a0 @ index-CyB6A2Fc.js:40
+kj @ index-CyB6A2Fc.js:37
+Ah @ index-CyB6A2Fc.js:37
+Mg @ index-CyB6A2Fc.js:37
+Yk @ index-CyB6A2Fc.js:37
+index-CyB6A2Fc.js:48  GET https://painel-a80o.onrender.com/api/test-connection 500 (Internal Server Error)
+(anonymous) @ index-CyB6A2Fc.js:48
+o @ index-CyB6A2Fc.js:48
+y @ index-CyB6A2Fc.js:48
+start @ index-CyB6A2Fc.js:48
+fetch @ index-CyB6A2Fc.js:48
+fl @ index-CyB6A2Fc.js:48
+fetch @ index-CyB6A2Fc.js:48
+refetch @ index-CyB6A2Fc.js:48
+o @ index-CyB6A2Fc.js:333
+Nk @ index-CyB6A2Fc.js:37
+kk @ index-CyB6A2Fc.js:37
+Mk @ index-CyB6A2Fc.js:37
+jb @ index-CyB6A2Fc.js:37
+uE @ index-CyB6A2Fc.js:37
+(anonymous) @ index-CyB6A2Fc.js:37
+a0 @ index-CyB6A2Fc.js:40
+kj @ index-CyB6A2Fc.js:37
+Ah @ index-CyB6A2Fc.js:37
+Mg @ index-CyB6A2Fc.js:37
+Yk @ index-CyB6A2Fc.js:37

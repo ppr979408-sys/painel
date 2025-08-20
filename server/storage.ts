@@ -58,13 +58,21 @@ export class MySQLStorage implements IStorage {
     const connection = await this.getConnection();
     
     try {
+      // Busca na tabela correta acesso_cliente com campos email, senha e ativado
       const [rows] = await connection.execute(
-        'SELECT * FROM clientes WHERE email = ? AND status = "1" LIMIT 1',
-        [credentials.email]
+        'SELECT * FROM acesso_cliente WHERE email = ? AND senha = ? AND ativado = "1" LIMIT 1',
+        [credentials.email, credentials.password]
       );
       
       const clients = rows as any[];
-      return clients.length > 0 ? clients[0] : null;
+      if (clients.length > 0) {
+        const user = clients[0];
+        console.log('✅ Usuário autenticado:', user.email, 'ID:', user.usuario_id);
+        return user;
+      }
+      
+      console.log('❌ Login falhou - usuário não encontrado ou senha incorreta');
+      return null;
       
     } catch (error) {
       console.error('Error authenticating user:', error);

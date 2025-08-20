@@ -26,12 +26,11 @@ Preferred communication style: Simple, everyday language.
 - **Middleware**: Request logging, JSON parsing, CORS handling
 
 ### Database Strategy
-- **Development**: Test data with TypeScript interfaces for rapid development
-- **Production**: MySQL database with real restaurant data (banco_cardapio_1753214520157.sql)
-- **ORM**: Drizzle ORM with PostgreSQL dialect for development tools
-- **MySQL Integration**: Direct mysql2 driver for production queries
+- **Production Only**: MySQL database from InfinityFree with real restaurant data
+- **Direct Connection**: mysql2 driver for all database operations
 - **Schema**: Uses real restaurant tables: clientes, cadastrofeed, ComandaPedidos
-- **Connection**: Configurable via environment variables (USE_MYSQL=true)
+- **Connection**: Required environment variables: MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
+- **No Fallback**: Application requires real database connection, no test data fallback
 
 ## Key Components
 

@@ -14,7 +14,7 @@ RUN npm ci
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN npx vite build && node build.js
 
 # Expose port
 EXPOSE 10000

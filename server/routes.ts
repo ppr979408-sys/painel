@@ -179,7 +179,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const salesData = await storage.getSalesData(codigoLoja, period as string);
       res.json(salesData);
     } catch (error) {
-      res.status(500).json({ error: "Erro ao carregar dados de vendas" });
+      console.error("Sales data error:", error);
+      res.status(500).json({ error: "Erro ao carregar dados de vendas", details: error instanceof Error ? error.message : "Unknown error" });
     }
   });
 

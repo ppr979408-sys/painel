@@ -1,0 +1,168 @@
+#4 [internal] load .dockerignore
+#4 transferring context:
+#4 transferring context: 131B done
+#4 DONE 0.0s
+#5 importing cache manifest from local:6117999487592728805
+#5 inferred cache manifest type: application/vnd.oci.image.index.v1+json done
+#5 DONE 0.0s
+#6 [internal] load build context
+#6 transferring context: 786.71kB 0.0s done
+#6 DONE 0.1s
+#7 [1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#7 resolve docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e 0.0s done
+#7 sha256:25ff2da83641908f65c3a74d80409d6b1b62ccfaab220b9ea70b80df5a2e0549 446B / 446B 0.1s done
+#7 sha256:1e5a4c89cee5c0826c540ab06d4b6b491c96eda01837f430bd47f0d26702d6e3 0B / 1.26MB 0.2s
+#7 sha256:dd71dde834b5c203d162902e6b8994cb2309ae049a0eabc4efea161b2b5a3d0e 0B / 40.01MB 0.2s
+#7 sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870 0B / 3.64MB 0.2s
+#7 sha256:1e5a4c89cee5c0826c540ab06d4b6b491c96eda01837f430bd47f0d26702d6e3 1.26MB / 1.26MB 0.3s done
+#7 sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870 3.64MB / 3.64MB 0.3s done
+#7 extracting sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870
+#7 sha256:dd71dde834b5c203d162902e6b8994cb2309ae049a0eabc4efea161b2b5a3d0e 16.78MB / 40.01MB 0.5s
+#7 extracting sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870 0.1s done
+#7 sha256:dd71dde834b5c203d162902e6b8994cb2309ae049a0eabc4efea161b2b5a3d0e 40.01MB / 40.01MB 0.6s done
+#7 extracting sha256:dd71dde834b5c203d162902e6b8994cb2309ae049a0eabc4efea161b2b5a3d0e
+#7 extracting sha256:dd71dde834b5c203d162902e6b8994cb2309ae049a0eabc4efea161b2b5a3d0e 1.2s done
+#7 extracting sha256:1e5a4c89cee5c0826c540ab06d4b6b491c96eda01837f430bd47f0d26702d6e3 0.1s done
+#7 DONE 2.0s
+#7 [1/7] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#7 extracting sha256:25ff2da83641908f65c3a74d80409d6b1b62ccfaab220b9ea70b80df5a2e0549 0.0s done
+#7 DONE 2.0s
+#8 [2/7] WORKDIR /app
+#8 DONE 0.0s
+#9 [3/7] COPY package*.json ./
+#9 DONE 0.0s
+#10 [4/7] RUN npm ci
+#10 7.639 
+#10 7.639 added 465 packages, and audited 466 packages in 7s
+#10 7.639 
+#10 7.640 65 packages are looking for funding
+#10 7.640   run `npm fund` for details
+#10 7.650 
+#10 7.650 8 vulnerabilities (3 low, 5 moderate)
+#10 7.650 
+#10 7.650 To address issues that do not require attention, run:
+#10 7.650   npm audit fix
+#10 7.650 
+#10 7.650 To address all issues (including breaking changes), run:
+#10 7.650   npm audit fix --force
+#10 7.650 
+#10 7.650 Run `npm audit` for details.
+#10 7.652 npm notice
+#10 7.652 npm notice New major version of npm available! 10.8.2 -> 11.5.2
+#10 7.652 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+#10 7.652 npm notice To update run: npm install -g npm@11.5.2
+#10 7.652 npm notice
+#10 DONE 14.0s
+#11 [5/7] COPY . .
+#11 DONE 0.3s
+#12 [6/7] RUN npm run build
+#12 0.205 
+#12 0.205 > rest-express@1.0.0 build
+#12 0.205 > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+#12 0.205 
+#12 0.419 vite v5.4.19 building for production...
+#12 0.472 transforming...
+#12 0.771 Browserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+#12 0.771   npx update-browserslist-db@latest
+#12 0.771   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+#12 6.880 ✓ 2527 modules transformed.
+#12 7.311 rendering chunks...
+#12 7.324 computing gzip size...
+#12 7.344 ../dist/public/index.html                   0.63 kB │ gzip:   0.38 kB
+#12 7.344 ../dist/public/assets/index-B1befOA9.css   64.08 kB │ gzip:  11.20 kB
+#12 7.344 ../dist/public/assets/index-ZvP7Hlof.js   754.89 kB │ gzip: 219.44 kB
+#12 7.344 
+#12 7.344 (!) Some chunks are larger than 500 kB after minification. Consider:
+#12 7.344 - Using dynamic import() to code-split the application
+#12 7.344 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+#12 7.344 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#12 7.344 ✓ built in 6.90s
+#12 7.414 
+#12 7.414   dist/index.js  23.6kb
+#12 7.414 
+#12 7.414 ⚡ Done in 5ms
+#12 DONE 11.0s
+#13 [7/7] RUN npm prune --production
+#13 0.182 npm warn config production Use `--omit=dev` instead.
+#13 2.061 
+#13 2.061 up to date, audited 356 packages in 2s
+#13 2.061 
+#13 2.061 53 packages are looking for funding
+#13 2.061   run `npm fund` for details
+#13 2.064 
+#13 2.064 3 low severity vulnerabilities
+#13 2.064 
+#13 2.064 To address all issues, run:
+#13 2.064   npm audit fix
+#13 2.064 
+#13 2.064 Run `npm audit` for details.
+#13 DONE 3.4s
+#14 exporting to docker image format
+#14 exporting layers
+#14 exporting layers 12.7s done
+#14 exporting manifest sha256:ad658de2d11e9de75badb365dcdf74d164ee2f44f049cb25687369825304c9d8 done
+#14 exporting config sha256:d983d8fc84a5697b873c0a4076304ac3e56546448d8d80634d9f34a43a7cbeea done
+#14 DONE 14.9s
+#15 exporting cache to client directory
+#15 preparing build cache for export
+#15 writing cache manifest sha256:aa87cb399681a7dbcbc27d0206479fbec1d5aecd1b8b050a8dfacb4efdc202fd done
+#15 DONE 1.9s
+Pushing image to registry...
+Upload succeeded
+==> Deploying...
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+node:internal/errors:496
+    ErrorCaptureStackTrace(err);
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /app/dist/index.js
+    at new NodeError (node:internal/errors:405:5)
+    at packageResolve (node:internal/modules/esm/resolve:916:9)
+    at moduleResolve (node:internal/modules/esm/resolve:973:20)
+    at defaultResolve (node:internal/modules/esm/resolve:1206:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:404:12)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:373:25)
+    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:250:38)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:76:39)
+    at link (node:internal/modules/esm/module_job:75:36) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+Node.js v18.20.8
+==> Exited with status 1
+==> Common ways to troubleshoot your deploy: https://render.com/docs/troubleshooting-deploys
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+node:internal/errors:496
+    ErrorCaptureStackTrace(err);
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /app/dist/index.js
+    at new NodeError (node:internal/errors:405:5)
+    at packageResolve (node:internal/modules/esm/resolve:916:9)
+    at moduleResolve (node:internal/modules/esm/resolve:973:20)
+    at defaultResolve (node:internal/modules/esm/resolve:1206:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:404:12)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:373:25)
+    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:250:38)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:76:39)
+    at link (node:internal/modules/esm/module_job:75:36) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+Node.js v18.20.8
+> rest-express@1.0.0 start
+> NODE_ENV=production node dist/index.js
+node:internal/errors:496
+    ErrorCaptureStackTrace(err);
+    ^
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'vite' imported from /app/dist/index.js
+    at new NodeError (node:internal/errors:405:5)
+    at packageResolve (node:internal/modules/esm/resolve:916:9)
+    at moduleResolve (node:internal/modules/esm/resolve:973:20)
+    at defaultResolve (node:internal/modules/esm/resolve:1206:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:404:12)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:373:25)
+    at ModuleLoader.getModuleJob (node:internal/modules/esm/loader:250:38)
+    at ModuleWrap.<anonymous> (node:internal/modules/esm/module_job:76:39)
+    at link (node:internal/modules/esm/module_job:75:36) {
+  code: 'ERR_MODULE_NOT_FOUND'
+}
+Node.js v18.20.8

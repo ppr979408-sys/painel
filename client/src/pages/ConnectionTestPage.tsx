@@ -141,21 +141,86 @@ export default function ConnectionTestPage() {
           </CardContent>
         </Card>
 
-        {(connectionResult as ConnectionTestResult)?.success && (connectionResult as ConnectionTestResult).data && (
+        {databaseLoading ? (
+          <div className="flex items-center justify-center p-8">
+            <RefreshCw className="h-6 w-6 animate-spin mr-2" />
+            <span>Testando conexão com o banco...</span>
+          </div>
+        ) : databaseStatus ? (
+          (databaseStatus as any).status === 'connection_error' ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <AlertCircle className="h-5 w-5 text-orange-500" />
+                  <span>Status da Conexão MySQL</span>
+                </CardTitle>
+                <CardDescription>
+                  Informações sobre a conexão com o banco InfinityFree
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                      {(databaseStatus as any).environment === 'development' ? 'Aguardando Deploy' : 'Erro de Conexão'}
+                    </Badge>
+                  </div>
+                  
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {(databaseStatus as any).message}
+                  </p>
+                  
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
+                    <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2">
+                      ℹ️ Como Testar no Render
+                    </h4>
+                    <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                      <li>• Faça deploy da aplicação no Render</li>
+                      <li>• Acesse a URL do deploy + /conexao</li>
+                      <li>• Verá conexão real com dados do restaurante</li>
+                      <li>• Sistema funcionará 100% com MySQL InfinityFree</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (databaseStatus as ConnectionTestResult)?.success && (databaseStatus as ConnectionTestResult).data ? (
           <Card>
             <CardHeader>
-              <CardTitle>Informações do Banco</CardTitle>
+              <CardTitle>Informações do Banco MySQL</CardTitle>
               <CardDescription>
-                Detalhes sobre as tabelas e dados disponíveis
+                Detalhes sobre as tabelas e dados disponíveis no InfinityFree
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
+                <div className="flex items-center space-x-2 mb-4">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                    Conectado ao MySQL
+                  </Badge>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium">Host:</span>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {(databaseStatus as ConnectionTestResult).host || 'N/A'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="font-medium">Database:</span>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {(databaseStatus as ConnectionTestResult).database || 'N/A'}
+                    </p>
+                  </div>
+                </div>
+
                 <div>
                   <h4 className="font-medium mb-2">Teste de Consulta</h4>
                   <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
                     <p className="text-sm">
-                      <strong>Timestamp:</strong> {(connectionResult as ConnectionTestResult).data!.test.timestamp}
+                      <strong>Timestamp:</strong> {(databaseStatus as ConnectionTestResult).data!.test.timestamp}
                     </p>
                   </div>
                 </div>
@@ -167,7 +232,7 @@ export default function ConnectionTestPage() {
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
                       <div className="text-2xl font-bold text-blue-600 dark:text-blue-400" data-testid="count-acesso-cliente">
-                        {(connectionResult as ConnectionTestResult).data!.tables.acesso_cliente.toLocaleString()}
+                        {(databaseStatus as ConnectionTestResult).data!.tables.acesso_cliente.toLocaleString()}
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
                         Usuários Admin
@@ -176,7 +241,7 @@ export default function ConnectionTestPage() {
                     
                     <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-md">
                       <div className="text-2xl font-bold text-green-600 dark:text-green-400" data-testid="count-cadastrofeed">
-                        {(connectionResult as ConnectionTestResult).data!.tables.cadastrofeed.toLocaleString()}
+                        {(databaseStatus as ConnectionTestResult).data!.tables.cadastrofeed.toLocaleString()}
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
                         Produtos
@@ -185,7 +250,7 @@ export default function ConnectionTestPage() {
                     
                     <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-md">
                       <div className="text-2xl font-bold text-purple-600 dark:text-purple-400" data-testid="count-comandapedidos">
-                        {(connectionResult as ConnectionTestResult).data!.tables.ComandaPedidos.toLocaleString()}
+                        {(databaseStatus as ConnectionTestResult).data!.tables.ComandaPedidos.toLocaleString()}
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
                         Pedidos
@@ -196,7 +261,8 @@ export default function ConnectionTestPage() {
               </div>
             </CardContent>
           </Card>
-        )}
+        ) : null
+      ) : null}
 
         <Card>
           <CardHeader>

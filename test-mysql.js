@@ -5,12 +5,20 @@ async function testMySQLConnection() {
   try {
     console.log('🔍 Tentando conectar ao banco MySQL...');
     
+    console.log(`🔗 Conectando ao InfinityFree MySQL...`);
+    console.log(`   Host: ${process.env.MYSQL_HOST}`);
+    console.log(`   Database: ${process.env.MYSQL_DATABASE}`);
+    console.log(`   User: ${process.env.MYSQL_USER}`);
+    
     const connection = await mysql.createConnection({
-      host: process.env.MYSQL_HOST || 'localhost',
-      user: process.env.MYSQL_USER || 'root', 
-      password: process.env.MYSQL_PASSWORD || '',
-      database: process.env.MYSQL_DATABASE || 'menu',
-      port: parseInt(process.env.MYSQL_PORT || '3306')
+      host: process.env.MYSQL_HOST,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
+      port: 3306,
+      connectTimeout: 30000,
+      acquireTimeout: 30000,
+      timeout: 30000
     });
 
     console.log('✅ Conexão MySQL estabelecida com sucesso!');

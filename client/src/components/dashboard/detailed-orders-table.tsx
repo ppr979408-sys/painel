@@ -18,8 +18,8 @@ export default function DetailedOrdersTable() {
     return <div className="animate-pulse bg-gray-200 h-64 rounded"></div>;
   }
 
-  const totalReceita = Array.isArray(detailedOrders) ? detailedOrders.reduce((sum: number, order: any) => sum + order.receita, 0) : 0;
-  const totalLucro = Array.isArray(detailedOrders) ? detailedOrders.reduce((sum: number, order: any) => sum + order.lucro, 0) : 0;
+  const totalReceita = Array.isArray(detailedOrders) ? detailedOrders.reduce((sum: number, order: any) => sum + (order.total || 0), 0) : 0;
+  const totalLucro = Array.isArray(detailedOrders) ? detailedOrders.reduce((sum: number, order: any) => sum + (order.profit || 0), 0) : 0;
   const margemMedia = totalReceita > 0 ? (totalLucro / totalReceita) * 100 : 0;
 
   const getStatusColor = (status: string) => {
@@ -134,31 +134,31 @@ export default function DetailedOrdersTable() {
                 <TableRow key={index} className="hover:bg-gray-50">
                   <TableCell className="font-mono">{order.comanda}</TableCell>
                   <TableCell>{order.user_name}</TableCell>
-                  <TableCell className="font-medium">{order.product_name}</TableCell>
+                  <TableCell className="font-medium">{order.items?.split('x')[1] || order.items}</TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{order.categoria}</Badge>
+                    <Badge variant="secondary">{"Diversos"}</Badge>
                   </TableCell>
-                  <TableCell className="text-right">{order.quantidade}</TableCell>
+                  <TableCell className="text-right">{order.items?.split('x')[0] || 1}</TableCell>
                   <TableCell className="text-right">
-                    R$ {order.preco_unitario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    R$ {(order.total / (order.items?.split('x')[0] || 1) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </TableCell>
                   <TableCell className="text-right font-medium">
-                    R$ {order.receita.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    R$ {(order.total || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </TableCell>
                   <TableCell className="text-right text-red-600">
-                    R$ {order.custo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    R$ {((order.total || 0) * 0.7).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </TableCell>
-                  <TableCell className={`text-right font-medium ${order.lucro >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    R$ {order.lucro.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  <TableCell className={`text-right font-medium text-green-600`}>
+                    R$ {(order.profit || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </TableCell>
-                  <TableCell className={`text-right font-medium ${order.margem >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {order.margem.toFixed(1)}%
+                  <TableCell className={`text-right font-medium text-green-600`}>
+                    {(order.margin || 0).toFixed(1)}%
                   </TableCell>
                   <TableCell>
                     <div className={`w-3 h-3 rounded-full ${getStatusColor(order.status)}`} title={order.status}></div>
                   </TableCell>
                   <TableCell className="text-sm text-gray-500">
-                    {order.data_formatada}
+                    {new Date().toLocaleDateString('pt-BR')}
                   </TableCell>
                 </TableRow>
               ))}

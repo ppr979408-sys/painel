@@ -19,8 +19,17 @@ export default function ProductsProfitTable() {
     return <div className="animate-pulse bg-gray-200 h-64 rounded"></div>;
   }
 
-  const totalRevenue = Array.isArray(products) ? products.reduce((sum: number, product: any) => sum + product.revenue, 0) : 0;
-  const totalProfit = Array.isArray(products) ? products.reduce((sum: number, product: any) => sum + product.profit, 0) : 0;
+  const totalRevenue = Array.isArray(products) ? products.reduce((sum: number, product: any) => {
+    const price = parseFloat(product.preco_venda) || 0;
+    const sales = product.salesCount || 0;
+    return sum + (price * sales);
+  }, 0) : 0;
+  const totalProfit = Array.isArray(products) ? products.reduce((sum: number, product: any) => {
+    const price = parseFloat(product.preco_venda) || 0;
+    const cost = parseFloat(product.preco_custo) || 0;
+    const sales = product.salesCount || 0;
+    return sum + ((price - cost) * sales);
+  }, 0) : 0;
 
   const exportProductsToCSV = () => {
     if (!Array.isArray(products) || products.length === 0) {
@@ -40,8 +49,8 @@ export default function ProductsProfitTable() {
         `R$ ${parseFloat(product.preco_venda).toFixed(2)}`,
         `R$ ${parseFloat(product.preco_custo).toFixed(2)}`,
         product.salesCount,
-        `R$ ${product.revenue.toFixed(2)}`,
-        `R$ ${product.profit.toFixed(2)}`,
+        `R$ ${((parseFloat(product.preco_venda) || 0) * (product.salesCount || 0)).toFixed(2)}`,
+        `R$ ${(((parseFloat(product.preco_venda) || 0) - (parseFloat(product.preco_custo) || 0)) * (product.salesCount || 0)).toFixed(2)}`,
         `${unitMargin.toFixed(1)}%`,
         product.estoque
       ];
@@ -129,18 +138,18 @@ export default function ProductsProfitTable() {
                     </TableCell>
                     <TableCell className="text-right">{product.salesCount}</TableCell>
                     <TableCell className="text-right font-medium">
-                      R$ {product.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      R$ {((parseFloat(product.preco_venda) || 0) * (product.salesCount || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </TableCell>
-                    <TableCell className={`text-right font-medium ${product.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      R$ {product.profit.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    <TableCell className={`text-right font-medium text-green-600`}>
+                      R$ {(((parseFloat(product.preco_venda) || 0) - (parseFloat(product.preco_custo) || 0)) * (product.salesCount || 0)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </TableCell>
                     <TableCell className={`text-right font-medium ${unitMargin >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {unitMargin.toFixed(1)}%
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
-                        <Progress value={Math.min(product.margin, 100)} className="w-16 h-2" />
-                        <span className="text-xs text-gray-500">{product.margin}%</span>
+                        <Progress value={Math.min(unitMargin, 100)} className="w-16 h-2" />
+                        <span className="text-xs text-gray-500">{unitMargin.toFixed(1)}%</span>
                       </div>
                     </TableCell>
                     <TableCell>

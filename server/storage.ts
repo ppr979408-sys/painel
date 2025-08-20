@@ -32,25 +32,69 @@ export class MySQLStorage implements IStorage {
       }
 
       try {
-        this.connection = await mysql.createConnection({
+        // InfinityFree specific connection settings
+        const connectionConfig = {
           host: process.env.MYSQL_HOST,
           user: process.env.MYSQL_USER,
           password: process.env.MYSQL_PASSWORD,
           database: process.env.MYSQL_DATABASE,
           port: parseInt(process.env.MYSQL_PORT || '3306'),
-          connectTimeout: 60000,
-          acquireTimeout: 60000,
-          timeout: 60000
-        });
+          connectTimeout: 120000,
+          acquireTimeout: 120000,
+          timeout: 120000,
+          ssl: undefined,
+          // InfinityFree specific settings
+          charset: 'utf8mb4',
+          supportBigNumbers: true,
+          bigNumberStrings: true,
+          // Additional options for remote connections
+          insecureAuth: true,
+          multipleStatements: true,
+          // DNS and connection retry settings
+          reconnect: true,
+          // Force IPv4 to avoid IPv6 issues
+          family: 4
+        };
+
+        console.log(`🔄 Tentando conectar ao MySQL InfinityFree: ${connectionConfig.host}:${connectionConfig.port}`);
+        console.log(`📊 Database: ${connectionConfig.database}`);
+        console.log(`👤 User: ${connectionConfig.user}`);
         
-        // Test the connection
-        await this.connection.execute('SELECT 1');
+        this.connection = await mysql.createConnection(connectionConfig);
+        
+        // Test the connection with a simple query
+        await this.connection.execute('SELECT 1 as test');
         console.log('✅ MySQL InfinityFree conectado com sucesso!');
         
+        // Additional connection info
+        const [results] = await this.connection.execute('SELECT CONNECTION_ID() as connection_id, VERSION() as version');
+        console.log('📋 Connection Info:', results);
+        
       } catch (error) {
-        console.error('❌ Erro ao conectar no MySQL:', error);
+        console.error('❌ Erro ao conectar no MySQL InfinityFree:');
+        console.error('🔸 Host:', process.env.MYSQL_HOST);
+        console.error('🔸 Database:', process.env.MYSQL_DATABASE);
+        console.error('🔸 User:', process.env.MYSQL_USER);
+        console.error('🔸 Error details:', error);
+        
+        if (error instanceof Error) {
+          console.error('🔸 Error message:', error.message);
+          console.error('🔸 Error code:', (error as any).code);
+          console.error('🔸 Error errno:', (error as any).errno);
+        }
+        
         this.connection = null;
-        throw new Error(`Failed to connect to MySQL: ${error}`);
+        
+        // Provide more specific error messages
+        if (error instanceof Error && error.message.includes('ENOTFOUND')) {
+          throw new Error(`DNS resolution failed for ${process.env.MYSQL_HOST}. This may be due to network restrictions in the Replit environment. InfinityFree databases may require external access from a deployed application.`);
+        } else if (error instanceof Error && error.message.includes('ECONNREFUSED')) {
+          throw new Error(`Connection refused to ${process.env.MYSQL_HOST}:3306. Please check if the database server is running and accessible.`);
+        } else if (error instanceof Error && error.message.includes('ER_ACCESS_DENIED')) {
+          throw new Error(`Access denied for user '${process.env.MYSQL_USER}'. Please verify your username and password.`);
+        }
+        
+        throw new Error(`Failed to connect to MySQL InfinityFree: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
     return this.connection;
